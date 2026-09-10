@@ -11,7 +11,7 @@
   <style>
     :root {
       --bg-color: #fdf0ed;
-      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-bg: rgba(255, 255, 255, 0.93);
       --primary: #ff8fa3;
       --primary-hover: #ff758f;
       --text-main: #4a4e69;
@@ -30,7 +30,7 @@
       position: relative;
     }
 
-    /* Base Floating Elements */
+    /* Floating Balloons & Hearts Container */
     .decoration {
       position: fixed;
       cursor: pointer;
@@ -40,8 +40,8 @@
       will-change: transform;
     }
     .balloon {
-      width: 45px;
-      height: 55px;
+      width: 44px;
+      height: 54px;
       background-color: #ffb3c1;
       border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
       box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
@@ -53,11 +53,11 @@
       position: absolute;
       bottom: -8px;
       width: 2px;
-      height: 40px;
+      height: 42px;
       background: rgba(0,0,0,0.15);
     }
     .heart {
-      font-size: 2rem;
+      font-size: 1.9rem;
       filter: drop-shadow(0 4px 6px rgba(255, 143, 163, 0.4));
     }
     .popped {
@@ -65,28 +65,31 @@
       opacity: 0 !important;
     }
 
-    /* Fast Animations from All 4 Corners */
-    @keyframes flyTL {
-      0% { transform: translate(-15vw, -15vh) scale(0.7) rotate(0deg); opacity: 0.95; }
-      100% { transform: translate(115vw, 115vh) scale(1.1) rotate(180deg); opacity: 0.3; }
-    }
-    @keyframes flyTR {
-      0% { transform: translate(115vw, -15vh) scale(0.7) rotate(0deg); opacity: 0.95; }
-      100% { transform: translate(-15vw, 115vh) scale(1.1) rotate(-180deg); opacity: 0.3; }
-    }
-    @keyframes flyBL {
-      0% { transform: translate(-15vw, 115vh) scale(0.7) rotate(0deg); opacity: 0.95; }
-      100% { transform: translate(115vw, -15vh) scale(1.1) rotate(180deg); opacity: 0.3; }
-    }
-    @keyframes flyBR {
-      0% { transform: translate(115vw, 115vh) scale(0.7) rotate(0deg); opacity: 0.95; }
-      100% { transform: translate(-15vw, -15vh) scale(1.1) rotate(-180deg); opacity: 0.3; }
+    /* Natural Sway & Float Animations across full screen */
+    @keyframes floatFull {
+      0% {
+        transform: translateY(108vh) translateX(0) rotate(0deg);
+        opacity: 0.95;
+      }
+      50% {
+        transform: translateY(50vh) translateX(var(--sway)) rotate(15deg);
+      }
+      100% {
+        transform: translateY(-18vh) translateX(calc(var(--sway) * -1)) rotate(-15deg);
+        opacity: 0.25;
+      }
     }
 
-    .anim-tl { animation: flyTL linear infinite; }
-    .anim-tr { animation: flyTR linear infinite; }
-    .anim-bl { animation: flyBL linear infinite; }
-    .anim-br { animation: flyBR linear infinite; }
+    @keyframes floatDiagonal {
+      0% {
+        transform: translate(var(--startX), var(--startY)) rotate(0deg);
+        opacity: 0.95;
+      }
+      100% {
+        transform: translate(var(--endX), var(--endY)) rotate(180deg);
+        opacity: 0.2;
+      }
+    }
 
     /* Main Card */
     .card {
@@ -104,7 +107,7 @@
       animation: fadeIn 0.8s ease-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.92); }
+      from { opacity: 0; transform: scale(0.94); }
       to { opacity: 1; transform: scale(1); }
     }
     
@@ -232,7 +235,7 @@
 
   <!-- Main Content Card -->
   <div class="card">
-    <h1>Happy Birthday Gauri! ✨</h1>
+    <h1>Happy Birthday Gauri! 🐸</h1>
 
     <div class="cake-container">
       <div class="wind-gust" id="windGust">💨💨</div>
@@ -307,27 +310,23 @@
       }, 400);
     }
 
-    // 3. Fast All-Corner Burst Generator
-    function launchCornerBurst() {
-      const colors = ['#ffb3c1', '#c1d3fe', '#bde0fe', '#ffc2d1', '#fcf6bd', '#ff8fa3', '#e8aeb7'];
-      const icons = ['💖', '✨', '🌸', '🤍', '⭐', '🎈', '💕', '🎂', '🥳'];
-      const animClasses = ['anim-tl', 'anim-tr', 'anim-bl', 'anim-br'];
+    // 3. Full Screen Scattered Generator (All edges & corners, zero lines)
+    function fillScreenCompletely() {
+      const colors = ['#ffb3c1', '#c1d3fe', '#bde0fe', '#ffc2d1', '#fcf6bd', '#ff8fa3', '#e8aeb7', '#cdb4db'];
+      const icons = ['💖', '✨', '🌸', '🤍', '⭐', '🎈', '💕', '🎂', '🥳', '💌'];
       
-      const totalElements = 75; // Packed density filling the entire screen
+      const totalElements = 80; // High density filling entire screen
 
       for (let i = 0; i < totalElements; i++) {
         const el = document.createElement('div');
-        const isBalloon = Math.random() > 0.4;
+        const isBalloon = Math.random() > 0.45;
         
         el.className = 'decoration ' + (isBalloon ? 'balloon' : 'heart');
-        
-        // Randomly select one of the 4 corners to burst from
-        const cornerClass = animClasses[i % 4];
-        el.classList.add(cornerClass);
 
         if (isBalloon) {
           el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-          el.onclick = function() {
+          el.onclick = function(e) {
+            e.stopPropagation();
             this.classList.add('popped');
             setTimeout(() => this.remove(), 200);
           };
@@ -335,18 +334,50 @@
           el.textContent = icons[Math.floor(Math.random() * icons.length)];
         }
 
-        // Fast speeds (2s to 4.5s)
-        const speed = Math.random() * 2.5 + 2.0;
-        el.style.animationDuration = `${speed}s`;
+        // 70% elements float straight up scattered across width (0vw to 95vw)
+        // 30% elements fly diagonally across corners with random offsets
+        if (Math.random() < 0.7) {
+          el.style.left = `${Math.random() * 94 + 2}vw`;
+          el.style.setProperty('--sway', `${(Math.random() - 0.5) * 100}px`);
+          
+          const duration = Math.random() * 4 + 4; // 4s to 8s
+          el.style.animation = `floatFull ${duration}s linear infinite`;
+          // Negative delay ensures screen is INSTANTLY filled when page opens!
+          el.style.animationDelay = `-${Math.random() * duration}s`;
+        } else {
+          // Diagonal flying from random edges/corners
+          const corner = Math.floor(Math.random() * 4);
+          let startX, startY, endX, endY;
 
-        // Negative delay so screen is INSTANTLY filled when clicked/loaded
-        el.style.animationDelay = `-${Math.random() * speed}s`;
+          if (corner === 0) { // Top Left
+            startX = `${Math.random() * -20}vw`; startY = `${Math.random() * -20}vh`;
+            endX = `${Math.random() * 50 + 70}vw`; endY = `${Math.random() * 50 + 70}vh`;
+          } else if (corner === 1) { // Top Right
+            startX = `${Math.random() * 20 + 100}vw`; startY = `${Math.random() * -20}vh`;
+            endX = `${Math.random() * -50 + 30}vw`; endY = `${Math.random() * 50 + 70}vh`;
+          } else if (corner === 2) { // Bottom Left
+            startX = `${Math.random() * -20}vw`; startY = `${Math.random() * 20 + 100}vh`;
+            endX = `${Math.random() * 50 + 70}vw`; endY = `${Math.random() * -50 + 30}vh`;
+          } else { // Bottom Right
+            startX = `${Math.random() * 20 + 100}vw`; startY = `${Math.random() * 20 + 100}vh`;
+            endX = `${Math.random() * -50 + 30}vw`; endY = `${Math.random() * -50 + 30}vh`;
+          }
+
+          el.style.setProperty('--startX', startX);
+          el.style.setProperty('--startY', startY);
+          el.style.setProperty('--endX', endX);
+          el.style.setProperty('--endY', endY);
+
+          const duration = Math.random() * 3 + 3; // 3s to 6s
+          el.style.animation = `floatDiagonal ${duration}s linear infinite`;
+          el.style.animationDelay = `-${Math.random() * duration}s`;
+        }
 
         document.body.appendChild(el);
       }
     }
 
-    window.onload = launchCornerBurst;
+    window.onload = fillScreenCompletely;
   </script>
 </body>
 </html>
