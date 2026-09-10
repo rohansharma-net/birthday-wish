@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Finale 🎁 | Page 3</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root { --bg-color: #f4efeb; --card-bg: #ffffff; --primary: #d4a373; --text-main: #4a4e69; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Quicksand', sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    
+    .card { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 20px; padding: 40px 25px; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.08); animation: fadeIn 0.8s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    h1 { font-family: 'Fredoka', sans-serif; font-size: 2.2rem; color: var(--primary); margin-bottom: 20px; }
+    
+    .letter-box { background: #faf8f6; border: 2px dashed #d4a373; border-radius: 12px; padding: 25px; text-align: left; line-height: 1.8; font-size: 0.95rem; margin-bottom: 25px; }
+    
+    .btn { background: var(--primary); color: white; padding: 14px 28px; border-radius: 50px; font-family: 'Fredoka', sans-serif; border: none; cursor: pointer; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(212, 163, 115, 0.4); transition: 0.3s; }
+    .btn:hover { background: #bc8a5f; transform: translateY(-3px); }
+    
+    .nav-bottom { margin-top: 25px; }
+    .nav-bottom a { color: #8f938c; font-size: 0.85rem; text-decoration: none; font-weight: bold; }
+  </style>
+</head>
+<body onload="popConfetti()">
+  <div class="card">
+    <h1>Happy Birthday! 🎂✨</h1>
+    
+    <div class="letter-box">
+      Dear gigi, ❤️<br><br>
+      Here is to celebrating you today! You can paste your favorite Hindi shayari or an original poem right here to make it extra special.<br><br>
+      Wishing you endless happiness, beautiful memories, and the best year ahead. Have the happiest birthday!<br><br>
+      Lots of love! 🎉
+    </div>
+
+    <button class="btn" onclick="popConfetti()">Celebrate Again! 🎊</button>
+    
+    <div class="nav-bottom">
+      <a href="index.html">↺ Go back to the beginning</a>
+    </div>
+  </div>
+
+  <script>
+    function popConfetti() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 }, colors: ['#d4a373', '#8f938c', '#e9e3df', '#bc8a5f'] });
+    }
+  </script>
+</body>
+</html>
