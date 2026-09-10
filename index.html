@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday! ✨ 🎉</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #fdf0ed;
+      --card-bg: #ffffff;
+      --primary: #ff8fa3;
+      --primary-hover: #ff758f;
+      --accent-green: #80b996;
+      --text-main: #4a4e69;
+      --text-muted: #8d99ae;
+      --shadow: 0 12px 32px rgba(255, 143, 163, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Floating Music Toggle Button */
+    .music-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--card-bg);
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      z-index: 10;
+      font-size: 1.2rem;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.08);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Main Container Card */
+    .card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 520px;
+      border-radius: 28px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Avatar & Badge */
+    .photo-wrapper {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 20px;
+    }
+
+    .photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid var(--primary);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .floating-badge {
+      position: absolute;
+      bottom: -5px;
+      right: -5px;
+      background: var(--accent-green);
+      color: white;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Headlines & Text */
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    /* Interactive Buttons */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.05rem;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(255, 143, 163, 0.3);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 143, 163, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--text-main);
+      border: 2px solid #f0e6e5;
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: #fdf5f4;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Wish Modal Popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 24px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .modal-content h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .modal-content p {
+      line-height: 1.6;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      background: var(--accent-green);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-family: 'Fredoka', sans-serif;
+      cursor: pointer;
+    }
+
+    /* Sparkles Decorative Icons */
+    .sparkle {
+      display: inline-block;
+      animation: spin 4s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio Toggle Button -->
+  <button class="music-btn" id="musicToggle" title="Play / Pause Song">
+    🎵
+  </button>
+
+  <!-- Audio Element (Replace with your favorite audio link) -->
+  <audio id="bgAudio" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73229.mp3?filename=happy-birthday-155461.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Main Card -->
+  <div class="card">
+    <div class="photo-wrapper">
+      <!-- Replace with custom photo URL -->
+      <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400&auto=format&fit=crop&q=80" alt="Birthday Person">
+      <div class="floating-badge">🎂 Today!</div>
+    </div>
+
+    <h1>Happy Birthday! <span class="sparkle">✨</span></h1>
+    <p class="subtitle">Wishing you a day as wonderfully special as you are!</p>
+
+    <div class="btn-group">
+      <button class="btn" onclick="popConfetti()">Celebrate with Confetti! 🎊</button>
+      <button class="btn btn-secondary" onclick="toggleModal(true)">Open Birthday Note 💌</button>
+    </div>
+  </div>
+
+  <!-- Birthday Note Modal -->
+  <div class="modal-overlay" id="wishModal">
+    <div class="modal-content">
+      <h2>A Special Wish 🌸</h2>
+      <p>
+        May your year ahead be filled with quiet moments of peace, endless laughter with loved ones, 
+        beautiful memories, and all the happiness your heart can hold. Happy Birthday! 🌟
+      </p>
+      <button class="close-btn" onclick="toggleModal(false)">Close Note</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio Player Toggle
+    const audio = document.getElementById('bgAudio');
+    const musicBtn = document.getElementById('musicToggle');
+    let isPlaying = false;
+
+    musicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        musicBtn.textContent = '🎵';
+      } else {
+        audio.play().catch(() => console.log("Audio play blocked by browser."));
+        musicBtn.textContent = '⏸️';
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // Interactive Confetti Function
+    function popConfetti() {
+      // Trigger canvas-confetti library
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#ff8fa3', '#80b996', '#ffe5ec', '#fdf0ed', '#ffb3c1']
+      });
+    }
+
+    // Trigger confetti automatically on page load after a small delay
+    window.addEventListener('load', () => {
+      setTimeout(popConfetti, 400);
+    });
+
+    // Modal Control Function
+    function toggleModal(show) {
+      const modal = document.getElementById('wishModal');
+      if (show) {
+        modal.classList.add('active');
+        popConfetti(); // Extra confetti when opening the letter
+      } else {
+        modal.classList.remove('active');
+      }
+    }
+  </script>
+</body>
+</html>
