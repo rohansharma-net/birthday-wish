@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Happy Birthday Gauri! ✨</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
   <style>
@@ -28,21 +29,35 @@
       overflow-x: hidden;
     }
 
-    /* Floating Decorations on the sides */
+    /* Fullscreen Entrance Overlay */
+    .entrance-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: var(--bg-color);
+      z-index: 999;
+      pointer-events: none;
+      transition: opacity 1.2s ease, visibility 1.2s ease;
+    }
+    .entrance-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* Floating Decorations */
     .decoration {
       position: fixed;
       cursor: pointer;
       user-select: none;
       animation: floatUp linear infinite;
-      z-index: 0;
+      z-index: 1;
       transition: transform 0.15s ease-out, opacity 0.15s ease-out;
     }
     .balloon {
-      width: 40px;
-      height: 50px;
+      width: 42px;
+      height: 52px;
       background-color: #ffb3c1;
       border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-      box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
+      box-shadow: inset -5px -5px 10px rgba(0,0,0,0.08);
       display: flex;
       justify-content: center;
     }
@@ -52,18 +67,18 @@
       bottom: -8px;
       width: 2px;
       height: 40px;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.15);
     }
     .heart {
-      font-size: 1.5rem;
-      filter: drop-shadow(0 4px 4px rgba(255, 143, 163, 0.3));
+      font-size: 1.6rem;
+      filter: drop-shadow(0 4px 6px rgba(255, 143, 163, 0.3));
     }
     @keyframes floatUp {
       0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
       100% { transform: translateY(-20vh) rotate(20deg); opacity: 0; }
     }
     .popped {
-      transform: scale(1.5) !important;
+      transform: scale(1.6) !important;
       opacity: 0 !important;
     }
 
@@ -72,32 +87,37 @@
       background: var(--card-bg);
       width: 100%;
       max-width: 500px;
-      border-radius: 24px;
+      border-radius: 28px;
       padding: 40px 25px;
       text-align: center;
       box-shadow: 0 12px 32px rgba(255, 143, 163, 0.18);
       z-index: 10;
       position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: revealCard 1s ease forwards 1.8s;
+    }
+    @keyframes revealCard {
+      to { opacity: 1; transform: translateY(0); }
     }
     
-    h1 { font-family: 'Fredoka', sans-serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 25px; }
+    h1 { font-family: 'Fredoka', sans-serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; }
 
-    /* Interactive Cake */
+    /* Interactive Cake & Wind Effect */
     .cake-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 20px 0 10px 0;
+      margin: 25px 0 15px 0;
       position: relative;
     }
     .candle {
       width: 12px;
-      height: 35px;
+      height: 38px;
       background: #ffebb3;
       border-radius: 4px;
       position: relative;
       z-index: 2;
-      box-shadow: inset -2px 0 0 rgba(0,0,0,0.05);
     }
     .flame {
       width: 16px;
@@ -108,25 +128,48 @@
       top: -26px;
       left: -2px;
       box-shadow: 0 0 15px #ffb703, 0 0 30px #fb8500;
-      cursor: pointer;
       animation: flicker 1s infinite alternate;
-      transition: opacity 0.3s;
+      transition: opacity 0.5s ease-out;
     }
     @keyframes flicker {
       0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
       100% { transform: scale(1.1) rotate(2deg); opacity: 1; }
     }
-    .flame-hint {
-      font-size: 0.8rem;
-      color: #fb8500;
+    .smoke {
+      width: 8px;
+      height: 8px;
+      background: rgba(180, 180, 180, 0.6);
+      border-radius: 50%;
       position: absolute;
-      top: -45px;
-      font-family: 'Fredoka', sans-serif;
+      top: -20px; left: 2px;
+      opacity: 0;
       pointer-events: none;
-      animation: bounce 2s infinite;
     }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-    
+    .smoke.active {
+      animation: smokeRise 1.5s ease-out forwards;
+    }
+    @keyframes smokeRise {
+      0% { opacity: 0.8; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-30px) scale(2.5); filter: blur(3px); }
+    }
+
+    /* Gust of Wind Particles */
+    .wind-gust {
+      position: absolute;
+      font-size: 1.8rem;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 20;
+    }
+    .wind-gust.active {
+      animation: windSweep 0.8s ease-out forwards;
+    }
+    @keyframes windSweep {
+      0% { opacity: 0; transform: translateX(-80px) translateY(10px) scale(0.6); }
+      50% { opacity: 1; }
+      100% { opacity: 0; transform: translateX(80px) translateY(-20px) scale(1.3); }
+    }
+
     .cake-top {
       width: 120px;
       height: 40px;
@@ -148,12 +191,30 @@
       border-radius: 5px;
     }
 
-    /* Countdown */
-    .countdown-box { margin-top: 30px; margin-bottom: 25px; }
-    .countdown-title { font-size: 0.9rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; }
-    .timer { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; color: var(--text-main); margin-top: 5px; }
+    /* Blow Candles Button */
+    .blow-btn {
+      background: #fff0f3;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s;
+    }
+    .blow-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
 
-    /* Button */
+    /* Countdown */
+    .countdown-box { margin-top: 25px; margin-bottom: 25px; }
+    .countdown-title { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; }
+    .timer { font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: var(--text-main); margin-top: 5px; }
+
+    /* Next Page Button */
     .btn {
       background-color: var(--primary); color: white; padding: 14px 28px; border-radius: 50px; text-decoration: none; display: inline-block; transition: 0.3s; border: none; font-family: 'Fredoka', sans-serif; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(255, 143, 163, 0.4);
     }
@@ -162,17 +223,22 @@
 </head>
 <body>
 
-  <!-- Card Content -->
+  <!-- Fullscreen Initial Balloons/Hearts Overlay -->
+  <div class="entrance-overlay" id="entranceOverlay"></div>
+
+  <!-- Main Content Card -->
   <div class="card">
     <h1>Happy Birthday Gauri! ✨</h1>
 
     <div class="cake-container">
+      <div class="wind-gust" id="windGust">💨💨</div>
       <div class="candle">
-        <div class="flame-hint" id="flameHint">Click me! 👇</div>
-        <div class="flame" id="flame" onclick="blowCandle(event)"></div>
+        <div class="flame" id="flame"></div>
+        <div class="smoke" id="smoke"></div>
       </div>
       <div class="cake-top"></div>
       <div class="cake-bottom"></div>
+      <button class="blow-btn" id="blowBtn" onclick="blowCandles()">Blow the Candles 💨</button>
     </div>
 
     <div class="countdown-box">
@@ -203,76 +269,96 @@
     }
     setInterval(updateCountdown, 1000); updateCountdown();
 
-    // 2. Blow Candle & Glitter Effect
-    function blowCandle(e) {
+    // 2. Windy Candle Blow with Glittery Stars
+    let isBlown = false;
+    function blowCandles() {
+      if (isBlown) return;
+      isBlown = true;
+
+      const wind = document.getElementById('windGust');
       const flame = document.getElementById('flame');
-      const hint = document.getElementById('flameHint');
-      
-      // Hide flame and text
-      flame.style.opacity = '0';
-      flame.style.pointerEvents = 'none';
-      if(hint) hint.style.opacity = '0';
+      const smoke = document.getElementById('smoke');
+      const blowBtn = document.getElementById('blowBtn');
 
-      // Glitter confetti effect
-      const rect = flame.getBoundingClientRect();
-      const x = (rect.left + rect.width / 2) / window.innerWidth;
-      const y = (rect.top + rect.height / 2) / window.innerHeight;
+      // Trigger windy visual effect
+      wind.classList.add('active');
 
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { x: x, y: y },
-        colors: ['#FFD700', '#FFA500', '#fff8dc', '#ffb703'], // Glitter/gold colors
-        disableForReducedMotion: true
-      });
+      setTimeout(() => {
+        // Extinguish flame & show smoke
+        flame.style.opacity = '0';
+        smoke.classList.add('active');
+        blowBtn.textContent = 'Candles Blown! 🌟';
+        blowBtn.style.opacity = '0.7';
+
+        // Trigger glittery stars confetti burst
+        const rect = flame.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        confetti({
+          particleCount: 100,
+          spread: 80,
+          origin: { x: x, y: y },
+          shapes: ['star'],
+          colors: ['#FFD700', '#FFA500', '#FFF', '#FF69B4', '#FFB6C1', '#BDE0FE'],
+          scalar: 1.2
+        });
+      }, 400);
     }
 
-    // 3. Generate Floating Balloons and Hearts on the Sides
-    function createSideDecorations() {
-      const colors = ['#ffb3c1', '#c1d3fe', '#bde0fe', '#ffc2d1', '#fcf6bd'];
-      const icons = ['💖', '✨', '🌸', '🤍'];
-      
-      for (let i = 0; i < 24; i++) {
+    // 3. Generate Fullscreen Initial Entrance & Floating Side Decorations
+    function initBalloonsAndHearts() {
+      const colors = ['#ffb3c1', '#c1d3fe', '#bde0fe', '#ffc2d1', '#fcf6bd', '#ff8fa3'];
+      const icons = ['💖', '✨', '🌸', '🤍', '⭐'];
+      const overlay = document.getElementById('entranceOverlay');
+
+      // Create initial overlay burst covering the whole screen
+      for (let i = 0; i < 40; i++) {
+        const el = document.createElement('div');
+        el.className = 'decoration ' + (Math.random() > 0.4 ? 'balloon' : 'heart');
+        if (el.classList.contains('balloon')) {
+          el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        } else {
+          el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        }
+        el.style.left = `${Math.random() * 92 + 4}vw`;
+        el.style.animationDuration = `${Math.random() * 4 + 3}s`;
+        overlay.appendChild(el);
+      }
+
+      // Smoothly fade out entrance overlay after 2.5 seconds
+      setTimeout(() => {
+        overlay.classList.add('fade-out');
+      }, 2500);
+
+      // Create permanent side decorations for Page 1
+      for (let i = 0; i < 20; i++) {
         setTimeout(() => {
           const el = document.createElement('div');
-          el.className = 'decoration';
-          
-          // Determine if it's a balloon or heart
           const isBalloon = Math.random() > 0.5;
+          el.className = 'decoration ' + (isBalloon ? 'balloon' : 'heart');
+          
           if (isBalloon) {
-            el.classList.add('balloon');
             el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            // Click to pop balloon
             el.onclick = function() {
               this.classList.add('popped');
               setTimeout(() => this.remove(), 200);
             };
           } else {
-            el.classList.add('heart');
             el.textContent = icons[Math.floor(Math.random() * icons.length)];
           }
 
-          // Randomize position: Left side (5-20%) or Right side (80-95%)
+          // Position strictly on sides (5-20% left or 80-95% right)
           const onLeft = Math.random() > 0.5;
-          el.style.left = onLeft ? `${Math.random() * 15 + 5}vw` : `${Math.random() * 15 + 80}vw`;
-          
-          // Randomize animation duration (8s to 15s) and delay
+          el.style.left = onLeft ? `${Math.random() * 15 + 4}vw` : `${Math.random() * 15 + 80}vw`;
           el.style.animationDuration = `${Math.random() * 7 + 8}s`;
           
           document.body.appendChild(el);
-          
-          // Remove from DOM when animation ends to save memory
-          el.addEventListener('animationiteration', () => {
-             if (Math.random() > 0.3) {
-                el.style.left = (Math.random() > 0.5) ? `${Math.random() * 15 + 5}vw` : `${Math.random() * 15 + 80}vw`;
-             }
-          });
-        }, i * 400); // Stagger creation
+        }, i * 500);
       }
     }
-    
-    // Start generating decorations when page loads
-    window.onload = createSideDecorations;
+
+    window.onload = initBalloonsAndHearts;
   </script>
 </body>
 </html>
