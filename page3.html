@@ -3,49 +3,531 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Finale 🎁 | Page 3</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <title>Your Birthday Stash 🎁 - Gauri's Special Realm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
-    :root { --bg-color: #f4efeb; --card-bg: #ffffff; --primary: #d4a373; --text-main: #4a4e69; }
+    :root {
+      --mint-light: #e8f8f5;
+      --mint-main: #a8e6cf;
+      --mint-dark: #52c2a3;
+      --turquoise-light: #e0f7fa;
+      --turquoise-main: #48cae4;
+      --turquoise-dark: #0096c7;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-color: #2b3a42;
+      --note-yellow: #fff3bf;
+      --note-pink: #ffdeeb;
+      --note-green: #d3f9d8;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Quicksand', sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, var(--mint-light) 0%, var(--turquoise-light) 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px 50px 15px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Floating Bubbles */
+    .bg-bubble {
+      position: fixed;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--mint-main), var(--turquoise-main));
+      opacity: 0.2;
+      filter: blur(25px);
+      z-index: 0;
+      animation: floatBg 8s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+    .bubble-1 { width: 300px; height: 300px; top: -80px; left: -80px; }
+    .bubble-2 { width: 350px; height: 350px; bottom: -100px; right: -80px; animation-delay: -4s; }
+
+    @keyframes floatBg {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(50px) scale(1.1); }
+    }
+
+    /* Layout Wrapper */
+    .stash-container {
+      width: 100%;
+      max-width: 650px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* Page Header */
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(72, 202, 228, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+    .header-card h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.2rem;
+      color: var(--turquoise-dark);
+      margin-bottom: 6px;
+    }
+    .header-card p {
+      font-size: 1rem;
+      color: #5a737d;
+      font-weight: 600;
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.4rem;
+      color: var(--turquoise-dark);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ============================================== */
+    /* GIFT 1: UNWRAP-ABLE GIFT BOXES                 */
+    /* ============================================== */
+    .gifts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+    @media (max-width: 500px) {
+      .gifts-grid { grid-template-columns: 1fr; }
+    }
+
+    .gift-card {
+      background: var(--card-bg);
+      border-radius: 22px;
+      padding: 25px 15px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid var(--mint-main);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+    .gift-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--turquoise-dark);
+      box-shadow: 0 15px 30px rgba(72, 202, 228, 0.3);
+    }
+    .gift-box-icon {
+      font-size: 3.2rem;
+      margin-bottom: 10px;
+      transition: transform 0.3s;
+    }
+    .gift-card:hover .gift-box-icon {
+      transform: rotate(-10deg) scale(1.1);
+    }
+    .gift-card-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.05rem;
+      color: var(--text-color);
+    }
+    .gift-card-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--turquoise-dark);
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* ============================================== */
+    /* GIFT 2: REASONS WHY YOU'RE AMAZING JAR         */
+    /* ============================================== */
+    .jar-section {
+      background: var(--card-bg);
+      border-radius: 28px;
+      padding: 30px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 15px 35px rgba(72, 202, 228, 0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .jar-graphic {
+      width: 120px;
+      height: 150px;
+      border: 5px solid var(--turquoise-dark);
+      border-radius: 20px 20px 35px 35px;
+      position: relative;
+      background: rgba(224, 247, 250, 0.4);
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-end;
+      justify-content: center;
+      gap: 4px;
+      padding: 10px;
+      overflow: hidden;
+      margin: 15px 0 20px 0;
+      box-shadow: inset 0 0 15px rgba(72, 202, 228, 0.3);
+    }
+    .jar-lid {
+      position: absolute;
+      top: -16px;
+      width: 90px;
+      height: 16px;
+      background: var(--mint-dark);
+      border-radius: 8px;
+      border: 3px solid var(--turquoise-dark);
+    }
+    .jar-mini-note {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      opacity: 0.85;
+      transform: rotate(calc(var(--r, 0) * 1deg));
+    }
+
+    /* Sticky Note Animation */
+    .sticky-note-display {
+      min-height: 110px;
+      width: 100%;
+      max-width: 380px;
+      background: var(--note-yellow);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      color: #4a4e69;
+      margin-bottom: 20px;
+      transform: rotate(-1deg);
+      transition: all 0.3s ease;
+      line-height: 1.4;
+    }
+    .sticky-note-display.pop-anim {
+      animation: popNote 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popNote {
+      0% { transform: scale(0.6) rotate(-10deg); opacity: 0; }
+      100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+    }
+
+    .pull-note-btn {
+      background: linear-gradient(135deg, var(--mint-dark), var(--turquoise-main));
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 20px rgba(82, 194, 163, 0.35);
+    }
+    .pull-note-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(72, 202, 228, 0.45);
+    }
+
+    /* ============================================== */
+    /* GIFT 3: BIRTHDAY VIBE MUSIC PLAYER             */
+    /* ============================================== */
+    .player-card {
+      background: var(--card-bg);
+      border-radius: 28px;
+      padding: 25px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 15px 35px rgba(72, 202, 228, 0.18);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    @media (max-width: 500px) {
+      .player-card { flex-direction: column; text-align: center; }
+    }
+
+    /* Spinning Vinyl Record */
+    .vinyl-wrapper {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #111;
+      border: 4px solid var(--turquoise-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .vinyl-label {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--mint-main), var(--turquoise-main));
+      border: 3px solid #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+    .vinyl-wrapper.spinning {
+      animation: spinVinyl 3s linear infinite;
+    }
+    @keyframes spinVinyl {
+      100% { transform: rotate(360deg); }
+    }
+
+    .player-info {
+      flex-grow: 1;
+    }
+    .track-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.2rem;
+      color: var(--turquoise-dark);
+    }
+    .track-subtitle {
+      font-size: 0.88rem;
+      color: #6c757d;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .play-btn {
+      background: var(--mint-dark);
+      color: white;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(82, 194, 163, 0.4);
+    }
+    .play-btn:hover {
+      background: var(--turquoise-dark);
+      transform: scale(1.08);
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(5px);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 1000;
+      opacity: 0; pointer-events: none; transition: 0.3s ease;
+      padding: 20px;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
     
-    .card { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 20px; padding: 40px 25px; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.08); animation: fadeIn 0.8s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-content {
+      background: white; width: 100%; max-width: 440px;
+      border-radius: 26px; padding: 30px 25px;
+      text-align: center; position: relative;
+      transform: scale(0.85); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      border: 3px solid var(--mint-main);
+    }
+    .modal-overlay.active .modal-content { transform: scale(1); }
     
-    h1 { font-family: 'Fredoka', sans-serif; font-size: 2.2rem; color: var(--primary); margin-bottom: 20px; }
+    .close-btn {
+      position: absolute; top: 15px; right: 18px;
+      font-size: 1.6rem; color: #aaa; cursor: pointer; border: none; background: none; font-weight: bold;
+    }
+    .close-btn:hover { color: var(--turquoise-dark); }
     
-    .letter-box { background: #faf8f6; border: 2px dashed #d4a373; border-radius: 12px; padding: 25px; text-align: left; line-height: 1.8; font-size: 0.95rem; margin-bottom: 25px; }
-    
-    .btn { background: var(--primary); color: white; padding: 14px 28px; border-radius: 50px; font-family: 'Fredoka', sans-serif; border: none; cursor: pointer; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(212, 163, 115, 0.4); transition: 0.3s; }
-    .btn:hover { background: #bc8a5f; transform: translateY(-3px); }
-    
-    .nav-bottom { margin-top: 25px; }
-    .nav-bottom a { color: #8f938c; font-size: 0.85rem; text-decoration: none; font-weight: bold; }
+    .modal-title { font-family: 'Fredoka', sans-serif; font-size: 1.7rem; color: var(--turquoise-dark); margin-bottom: 15px; }
+    .modal-body { font-size: 1rem; line-height: 1.6; color: var(--text-color); white-space: pre-wrap; }
   </style>
 </head>
-<body onload="popConfetti()">
-  <div class="card">
-    <h1>Happy Birthday! 🎂✨</h1>
+<body>
+
+  <div class="bg-bubble bubble-1"></div>
+  <div class="bg-bubble bubble-2"></div>
+
+  <div class="stash-container">
     
-    <div class="letter-box">
-      Dear gigi, ❤️<br><br>
-      Here is to celebrating you today! You can paste your favorite Hindi shayari or an original poem right here to make it extra special.<br><br>
-      Wishing you endless happiness, beautiful memories, and the best year ahead. Have the happiest birthday!<br><br>
-      Lots of love! 🎉
+    <!-- Header -->
+    <div class="header-card">
+      <h1>Your Birthday Stash 🎁✨</h1>
+      <p>Welcome Gabbu! Explore your unlocked surprises below.</p>
     </div>
 
-    <button class="btn" onclick="popConfetti()">Celebrate Again! 🎊</button>
-    
-    <div class="nav-bottom">
-      <a href="index.html">↺ Go back to the beginning</a>
+    <!-- GIFT 1: UNWRAP-ABLE GIFT BOXES -->
+    <div>
+      <div class="section-title"><span>🎁</span> <span>Unwrap Your Gifts</span></div>
+      <div class="gifts-grid">
+        <div class="gift-card" onclick="openGift('letter')">
+          <div class="gift-box-icon">💌</div>
+          <div class="gift-card-title">A Letter for Gigi</div>
+          <div class="gift-card-status">Click to Unwrap</div>
+        </div>
+
+        <div class="gift-card" onclick="openGift('coupons')">
+          <div class="gift-box-icon">🎟️</div>
+          <div class="gift-card-title">Birthday Coupons</div>
+          <div class="gift-card-status">Click to Unwrap</div>
+        </div>
+
+        <div class="gift-card" onclick="openGift('secret')">
+          <div class="gift-box-icon">🤫</div>
+          <div class="gift-card-title">Secret Shayari</div>
+          <div class="gift-card-status">Click to Unwrap</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GIFT 2: REASONS WHY YOU'RE AMAZING JAR -->
+    <div>
+      <div class="section-title"><span>🫙</span> <span>"Why You're Amazing" Jar</span></div>
+      <div class="jar-section">
+        
+        <div class="jar-graphic">
+          <div class="jar-lid"></div>
+          <div class="jar-mini-note" style="background: var(--note-yellow); --r: -12;"></div>
+          <div class="jar-mini-note" style="background: var(--note-pink); --r: 15;"></div>
+          <div class="jar-mini-note" style="background: var(--note-green); --r: -8;"></div>
+          <div class="jar-mini-note" style="background: var(--note-yellow); --r: 20;"></div>
+          <div class="jar-mini-note" style="background: var(--note-pink); --r: -5;"></div>
+        </div>
+
+        <div class="sticky-note-display" id="noteDisplay">
+          Click "Pull a Note" to draw a surprise compliment from the jar! 📜
+        </div>
+
+        <button class="pull-note-btn" onclick="pullNote()">Pull a Note 📜</button>
+      </div>
+    </div>
+
+    <!-- GIFT 3: MUSIC PLAYER -->
+    <div>
+      <div class="section-title"><span>🎵</span> <span>Birthday Vibe Player</span></div>
+      <div class="player-card">
+        <div class="vinyl-wrapper" id="vinylRecord">
+          <div class="vinyl-label">🌸</div>
+        </div>
+        <div class="player-info">
+          <div class="track-title">Gauri's Birthday Playlist 🎧</div>
+          <div class="track-subtitle">Vintage 90s Vibe & Calm Tones</div>
+          <button class="play-btn" id="playBtn" onclick="toggleAudio()">▶</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Reusable Modal for Gifts -->
+  <div class="modal-overlay" id="giftModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeGift()">×</button>
+      <div class="modal-title" id="modalTitle">Gift Title</div>
+      <div class="modal-body" id="modalBody">Gift Content...</div>
     </div>
   </div>
 
+  <!-- Hidden Audio Tag for Music Player -->
+  <audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
+
   <script>
-    function popConfetti() {
-      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 }, colors: ['#d4a373', '#8f938c', '#e9e3df', '#bc8a5f'] });
+    // Gift Box Modal Content
+    const giftContents = {
+      letter: {
+        title: "To my favorite, Gabbu 💌",
+        content: "Happy Birthday Gauri!\n\nThank you for being such an irreplaceable best friend. From endless jokes to late-night chats, every single moment is better with you around.\n\nI hope this year brings you infinite happiness, good food, peace, and success in everything you do! Keep shining bright always. ✨"
+      },
+      coupons: {
+        title: "Birthday Coupons 🎟️",
+        content: "Redeemable anytime! Screenshot to claim:\n\n🍔 1x Free Treat of Your Choice\n🤫 1x 'You Are Right, I Am Wrong' Pass\n🎬 1x Movie Night (Your Pick!)\n📞 1x Late Night Rant Session (I just listen)\n\n(Valid forever, non-transferable! 😉)"
+      },
+      secret: {
+        title: "A Special Shayari for Gigi ✨",
+        content: "चाँद से प्यारी चांदनी, \nचांदनी से भी प्यारी रात,\nरात से प्यारी ज़िंदगी, \nऔर ज़िंदगी से भी प्यारी आप। 🌸\n\nHappy Birthday once again, Gabbu! 🎉"
+      }
+    };
+
+    function openGift(giftKey) {
+      const modal = document.getElementById('giftModal');
+      document.getElementById('modalTitle').textContent = giftContents[giftKey].title;
+      document.getElementById('modalBody').textContent = giftContents[giftKey].content;
+      modal.classList.add('active');
+
+      // Pop Confetti
+      confetti({ particleCount: 70, spread: 70, origin: { y: 0.5 }, colors: ['#a8e6cf', '#48cae4', '#ffd166'] });
+    }
+
+    function closeGift() {
+      document.getElementById('giftModal').classList.remove('active');
+    }
+
+    // Jar Notes Array
+    const reasonsNotes = [
+      "You have an amazing sense of humor that makes every day brighter! 🌟",
+      "You always stay genuine and authentic to who you are. 👑",
+      "You're the absolute queen of good vibes and fun energy! 🌸",
+      "Your smile can instantly lift anyone's mood! 😊",
+      "You make the best memories out of the smallest moments. 📸",
+      "Because Gabbu / gigi is simply one of a kind! ✨"
+    ];
+
+    const noteColors = ['var(--note-yellow)', 'var(--note-pink)', 'var(--note-green)'];
+
+    function pullNote() {
+      const noteDisplay = document.getElementById('noteDisplay');
+      const randomNote = reasonsNotes[Math.floor(Math.random() * reasonsNotes.length)];
+      const randomColor = noteColors[Math.floor(Math.random() * noteColors.length)];
+
+      noteDisplay.classList.remove('pop-anim');
+      void noteDisplay.offsetWidth; // Trigger reflow
+      
+      noteDisplay.textContent = randomNote;
+      noteDisplay.style.background = randomColor;
+      noteDisplay.classList.add('pop-anim');
+
+      confetti({ particleCount: 25, spread: 40, origin: { y: 0.6 } });
+    }
+
+    // Music Player Logic
+    let isPlaying = false;
+    const audio = document.getElementById('bgMusic');
+    const playBtn = document.getElementById('playBtn');
+    const vinyl = document.getElementById('vinylRecord');
+
+    function toggleAudio() {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          isPlaying = true;
+          playBtn.textContent = '⏸';
+          vinyl.classList.add('spinning');
+        }).catch(err => {
+          alert('Click play again to start audio!');
+        });
+      } else {
+        audio.pause();
+        isPlaying = false;
+        playBtn.textContent = '▶';
+        vinyl.classList.remove('spinning');
+      }
     }
   </script>
 </body>
