@@ -4,55 +4,187 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Happy Birthday Gauri! ✨</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
   <style>
     :root {
-      --bg-color: #f4efeb; /* Vintage cream background */
+      --bg-color: #fdf0ed;
       --card-bg: #ffffff;
-      --primary: #d4a373; /* Warm aesthetic tone */
-      --primary-hover: #bc8a5f;
+      --primary: #ff8fa3;
+      --primary-hover: #ff758f;
       --text-main: #4a4e69;
-      --shadow: 0 12px 32px rgba(0,0,0,0.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Quicksand', sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    body { 
+      font-family: 'Quicksand', sans-serif; 
+      background-color: var(--bg-color); 
+      color: var(--text-main); 
+      min-height: 100vh; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Floating Decorations on the sides */
+    .decoration {
+      position: fixed;
+      cursor: pointer;
+      user-select: none;
+      animation: floatUp linear infinite;
+      z-index: 0;
+      transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+    }
+    .balloon {
+      width: 40px;
+      height: 50px;
+      background-color: #ffb3c1;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+    }
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      width: 2px;
+      height: 40px;
+      background: rgba(0,0,0,0.2);
+    }
+    .heart {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 4px 4px rgba(255, 143, 163, 0.3));
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-20vh) rotate(20deg); opacity: 0; }
+    }
+    .popped {
+      transform: scale(1.5) !important;
+      opacity: 0 !important;
+    }
+
+    /* Main Card */
+    .card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 500px;
+      border-radius: 24px;
+      padding: 40px 25px;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(255, 143, 163, 0.18);
+      z-index: 10;
+      position: relative;
+    }
     
-    .card { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 20px; padding: 40px 25px; text-align: center; box-shadow: var(--shadow); animation: fadeIn 1s ease-in-out; border: 1px solid #e9e3df; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    h1 { font-family: 'Fredoka', sans-serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 25px; }
+
+    /* Interactive Cake */
+    .cake-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0 10px 0;
+      position: relative;
+    }
+    .candle {
+      width: 12px;
+      height: 35px;
+      background: #ffebb3;
+      border-radius: 4px;
+      position: relative;
+      z-index: 2;
+      box-shadow: inset -2px 0 0 rgba(0,0,0,0.05);
+    }
+    .flame {
+      width: 16px;
+      height: 24px;
+      background: #ffb703;
+      border-radius: 50% 50% 20% 20%;
+      position: absolute;
+      top: -26px;
+      left: -2px;
+      box-shadow: 0 0 15px #ffb703, 0 0 30px #fb8500;
+      cursor: pointer;
+      animation: flicker 1s infinite alternate;
+      transition: opacity 0.3s;
+    }
+    @keyframes flicker {
+      0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+      100% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+    }
+    .flame-hint {
+      font-size: 0.8rem;
+      color: #fb8500;
+      position: absolute;
+      top: -45px;
+      font-family: 'Fredoka', sans-serif;
+      pointer-events: none;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     
-    .photo-wrapper { position: relative; width: 140px; height: 140px; margin: 0 auto 20px; }
-    .photo-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 4px solid var(--primary); }
-    .floating-badge { position: absolute; bottom: -5px; right: -15px; background: #8f938c; color: white; font-family: 'Fredoka', sans-serif; font-size: 0.85rem; padding: 6px 14px; border-radius: 12px; animation: bounce 2s infinite; }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-    
-    h1 { font-family: 'Fredoka', sans-serif; font-size: 2.4rem; color: var(--primary); margin-bottom: 8px; }
-    
-    .countdown-box { background: #faf8f6; border: 2px dashed var(--primary); border-radius: 16px; padding: 15px; margin: 25px 0; }
-    .timer { font-family: 'Fredoka', sans-serif; font-size: 1.5rem; margin-top: 5px; color: #6b705c; }
-    
-    .btn { background-color: var(--primary); color: white; font-family: 'Fredoka', sans-serif; font-size: 1.1rem; padding: 14px 28px; border-radius: 50px; text-decoration: none; display: inline-block; transition: all 0.3s; margin-top: 10px; border: none; box-shadow: 0 4px 15px rgba(212, 163, 115, 0.4); }
+    .cake-top {
+      width: 120px;
+      height: 40px;
+      background: #ffc2d1;
+      border-radius: 10px 10px 0 0;
+      margin-top: -5px;
+      position: relative;
+      z-index: 1;
+    }
+    .cake-top::after {
+      content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 20px;
+      background: radial-gradient(circle, #fff 10px, transparent 11px) repeat-x;
+      background-size: 20px 20px;
+    }
+    .cake-bottom {
+      width: 140px;
+      height: 50px;
+      background: #ffe5ec;
+      border-radius: 5px;
+    }
+
+    /* Countdown */
+    .countdown-box { margin-top: 30px; margin-bottom: 25px; }
+    .countdown-title { font-size: 0.9rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; }
+    .timer { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; color: var(--text-main); margin-top: 5px; }
+
+    /* Button */
+    .btn {
+      background-color: var(--primary); color: white; padding: 14px 28px; border-radius: 50px; text-decoration: none; display: inline-block; transition: 0.3s; border: none; font-family: 'Fredoka', sans-serif; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(255, 143, 163, 0.4);
+    }
     .btn:hover { background-color: var(--primary-hover); transform: translateY(-3px); }
   </style>
 </head>
 <body>
+
+  <!-- Card Content -->
   <div class="card">
-    <div class="photo-wrapper">
-      <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400" alt="Birthday Person">
-      <div class="floating-badge">🎂 Sept 19</div>
-    </div>
     <h1>Happy Birthday Gauri! ✨</h1>
-    <p>Counting down to your special day...</p>
+
+    <div class="cake-container">
+      <div class="candle">
+        <div class="flame-hint" id="flameHint">Click me! 👇</div>
+        <div class="flame" id="flame" onclick="blowCandle(event)"></div>
+      </div>
+      <div class="cake-top"></div>
+      <div class="cake-bottom"></div>
+    </div>
 
     <div class="countdown-box">
-      <div style="font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Countdown to Sept 19</div>
+      <div class="countdown-title">Countdown to Sept 19 🎈</div>
       <div class="timer" id="countdownTimer">Loading...</div>
     </div>
 
-    <!-- Links directly to Page 2 -->
-    <a href="page2.html" class="btn">Start the Journey! 🚀 ➔</a>
+    <a href="page2.html" class="btn">Open Your Gifts! 🎁 ➔</a>
   </div>
 
   <script>
+    // 1. Countdown Logic
     function updateCountdown() {
       const now = new Date();
       let targetYear = now.getFullYear();
@@ -70,6 +202,77 @@
       else { timerElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`; }
     }
     setInterval(updateCountdown, 1000); updateCountdown();
+
+    // 2. Blow Candle & Glitter Effect
+    function blowCandle(e) {
+      const flame = document.getElementById('flame');
+      const hint = document.getElementById('flameHint');
+      
+      // Hide flame and text
+      flame.style.opacity = '0';
+      flame.style.pointerEvents = 'none';
+      if(hint) hint.style.opacity = '0';
+
+      // Glitter confetti effect
+      const rect = flame.getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { x: x, y: y },
+        colors: ['#FFD700', '#FFA500', '#fff8dc', '#ffb703'], // Glitter/gold colors
+        disableForReducedMotion: true
+      });
+    }
+
+    // 3. Generate Floating Balloons and Hearts on the Sides
+    function createSideDecorations() {
+      const colors = ['#ffb3c1', '#c1d3fe', '#bde0fe', '#ffc2d1', '#fcf6bd'];
+      const icons = ['💖', '✨', '🌸', '🤍'];
+      
+      for (let i = 0; i < 24; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'decoration';
+          
+          // Determine if it's a balloon or heart
+          const isBalloon = Math.random() > 0.5;
+          if (isBalloon) {
+            el.classList.add('balloon');
+            el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            // Click to pop balloon
+            el.onclick = function() {
+              this.classList.add('popped');
+              setTimeout(() => this.remove(), 200);
+            };
+          } else {
+            el.classList.add('heart');
+            el.textContent = icons[Math.floor(Math.random() * icons.length)];
+          }
+
+          // Randomize position: Left side (5-20%) or Right side (80-95%)
+          const onLeft = Math.random() > 0.5;
+          el.style.left = onLeft ? `${Math.random() * 15 + 5}vw` : `${Math.random() * 15 + 80}vw`;
+          
+          // Randomize animation duration (8s to 15s) and delay
+          el.style.animationDuration = `${Math.random() * 7 + 8}s`;
+          
+          document.body.appendChild(el);
+          
+          // Remove from DOM when animation ends to save memory
+          el.addEventListener('animationiteration', () => {
+             if (Math.random() > 0.3) {
+                el.style.left = (Math.random() > 0.5) ? `${Math.random() * 15 + 5}vw` : `${Math.random() * 15 + 80}vw`;
+             }
+          });
+        }, i * 400); // Stagger creation
+      }
+    }
+    
+    // Start generating decorations when page loads
+    window.onload = createSideDecorations;
   </script>
 </body>
 </html>
