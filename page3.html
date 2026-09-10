@@ -33,7 +33,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 15px 50px 15px;
+      padding: 30px 15px 60px 15px;
       overflow-x: hidden;
       position: relative;
     }
@@ -328,6 +328,27 @@
       transform: scale(1.08);
     }
 
+    /* PAGE NAVIGATION BUTTON TO PAGE 4 */
+    .next-page-btn {
+      background: linear-gradient(135deg, var(--mint-dark), var(--turquoise-dark));
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 150, 199, 0.35);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .next-page-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(72, 202, 228, 0.5);
+    }
+
     /* Modal Styling */
     .modal-overlay {
       position: fixed;
@@ -435,6 +456,13 @@
       </div>
     </div>
 
+    <!-- NAVIGATION TO PAGE 4 (THE GRAND FINALE) -->
+    <div style="text-align: center; margin-top: 15px; margin-bottom: 10px;">
+      <a href="page4.html" class="next-page-btn">
+        Proceed to Grand Finale 👑 ➔
+      </a>
+    </div>
+
   </div>
 
   <!-- Reusable Modal for Gifts -->
@@ -454,11 +482,11 @@
     const giftContents = {
       letter: {
         title: "To my favorite, Gabbu 💌",
-        content: "Happy Birthday Gauri!\n\nThank you for being such an irreplaceable best friend. From endless jokes to late-night chats, every single moment is better with you around.\n\nI hope this year brings you infinite happiness, good food, peace, and success in everything you do! Keep shining bright always. ✨"
+        content: "Happy Birthday Gauri!\n\nThank you for being such an irreplaceable best friend. From endless jokes to late-night chats, every single moment is better with you around.\n\nI hope this year brings you infinite happiness, peace, success, and pure joy in everything you do! Keep shining bright always. ✨"
       },
       coupons: {
         title: "Birthday Coupons 🎟️",
-        content: "Redeemable anytime! Screenshot to claim:\n\n🍔 1x Free Treat of Your Choice\n🤫 1x 'You Are Right, I Am Wrong' Pass\n🎬 1x Movie Night (Your Pick!)\n📞 1x Late Night Rant Session (I just listen)\n\n(Valid forever, non-transferable! 😉)"
+        content: "Redeemable anytime! Screenshot to claim:\n\n☕ 1x Free Favorite Coffee / Drink\n🤫 1x 'You Are Right, I Am Wrong' Pass\n🎬 1x Movie Night (Your Choice!)\n📞 1x Late Night Rant Session (I just listen)\n\n(Valid forever, non-transferable! 😉)"
       },
       secret: {
         title: "A Special Shayari for Gigi ✨",
