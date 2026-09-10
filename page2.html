@@ -3,61 +3,564 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Our Memories 📸 | Page 2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <title>Security Verification 🔐 - Gauri's Realm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
-    :root { --bg-color: #f4efeb; --card-bg: #ffffff; --primary: #d4a373; --text-main: #4a4e69; }
+    :root {
+      --mint-light: #e8f8f5;
+      --mint-main: #a8e6cf;
+      --mint-dark: #52c2a3;
+      --turquoise-light: #e0f7fa;
+      --turquoise-main: #48cae4;
+      --turquoise-dark: #0096c7;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-color: #2b3a42;
+      --error-red: #ff6b6b;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Quicksand', sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-    
-    .card { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 20px; padding: 35px 25px; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.08); animation: fadeIn 0.8s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-    
-    h1 { font-family: 'Fredoka', sans-serif; color: var(--primary); margin-bottom: 20px; }
 
-    /* Vintage Polaroid Gallery Grid */
-    .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-    .polaroid { background: white; padding: 10px 10px 20px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 4px; transform: rotate(-2deg); transition: transform 0.3s; }
-    .polaroid:nth-child(even) { transform: rotate(3deg); }
-    .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
-    .polaroid img { width: 100%; height: 140px; object-fit: cover; filter: contrast(1.1) sepia(0.2); }
-    .polaroid p { font-family: 'Fredoka', sans-serif; font-size: 0.9rem; margin-top: 10px; color: #555; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, var(--mint-light) 0%, var(--turquoise-light) 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-    /* Jokes Section */
-    .joke-box { background: #faf8f6; border-left: 4px solid #8f938c; padding: 15px; border-radius: 8px; margin-bottom: 12px; text-align: left; }
-    .joke-box h3 { font-family: 'Fredoka', sans-serif; font-size: 1rem; color: #6b705c; }
+    /* Ambient background floating bubbles */
+    .bg-bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--mint-main), var(--turquoise-main));
+      opacity: 0.25;
+      filter: blur(20px);
+      z-index: 0;
+      animation: floatBg 8s infinite alternate ease-in-out;
+    }
+    .bubble-1 { width: 250px; height: 250px; top: -50px; left: -50px; }
+    .bubble-2 { width: 300px; height: 300px; bottom: -80px; right: -50px; animation-delay: -4s; }
+
+    @keyframes floatBg {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(40px) scale(1.1); }
+    }
+
+    /* Main Verification Wrapper */
+    .verification-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      width: 100%;
+      max-width: 460px;
+      border-radius: 28px;
+      padding: 35px 25px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(72, 202, 228, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+      z-index: 10;
+      transition: all 0.4s ease;
+    }
+
+    /* Progress Header */
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: var(--mint-light);
+      border-radius: 10px;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 33.33%;
+      background: linear-gradient(90deg, var(--mint-dark), var(--turquoise-main));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+    .step-indicator {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.85rem;
+      color: var(--turquoise-dark);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    /* Verification Steps Common */
+    .step-card {
+      display: none;
+      animation: fadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .step-card.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      color: var(--turquoise-dark);
+      margin-bottom: 8px;
+    }
+    p.instructions {
+      font-size: 0.95rem;
+      color: #5a737d;
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    /* ---------------------------------- */
+    /* STEP 1: CHECKBOX CAPTCHA           */
+    /* ---------------------------------- */
+    .captcha-box {
+      background: #ffffff;
+      border: 2px solid var(--mint-main);
+      border-radius: 16px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+    .captcha-box:hover {
+      border-color: var(--turquoise-main);
+      transform: translateY(-2px);
+    }
+    .checkbox-left { display: flex; align-items: center; gap: 14px; }
+    .custom-check {
+      width: 28px; height: 28px;
+      border: 2px solid var(--mint-dark);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      transition: 0.3s;
+    }
+    .spinner {
+      width: 18px; height: 18px;
+      border: 3px solid var(--mint-light);
+      border-top: 3px solid var(--turquoise-dark);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .checkmark { color: var(--turquoise-dark); font-size: 1.2rem; display: none; font-weight: bold; }
+    .captcha-label { font-weight: 700; font-size: 1rem; color: var(--text-color); }
+    .captcha-badge { font-size: 1.5rem; }
+
+    /* ---------------------------------- */
+    /* STEP 2: IMAGE / LOVES GRID        */
+    /* ---------------------------------- */
+    .captcha-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .grid-item {
+      background: white;
+      border: 2px solid #e2f0ed;
+      border-radius: 16px;
+      padding: 12px 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+      position: relative;
+    }
+    .grid-item:hover {
+      border-color: var(--mint-dark);
+      transform: scale(1.03);
+    }
+    .grid-item.selected {
+      border-color: var(--turquoise-main);
+      background: var(--turquoise-light);
+      box-shadow: 0 0 0 3px rgba(72, 202, 228, 0.3);
+    }
+    .grid-item.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 6px; right: 8px;
+      background: var(--turquoise-dark);
+      color: white;
+      font-size: 0.75rem;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      font-weight: bold;
+    }
+    .item-icon { font-size: 2rem; }
+    .item-name { font-size: 0.8rem; font-weight: 700; color: var(--text-color); }
+
+    /* Shake animation for wrong selection */
+    .shake { animation: shake 0.4s ease-in-out; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    /* ---------------------------------- */
+    /* STEP 3: BIOMETRIC SCANNER          */
+    /* ---------------------------------- */
+    .scanner-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 15px 0 20px 0;
+    }
+    .scanner-btn {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff, var(--mint-light));
+      border: 4px solid var(--turquoise-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3.2rem;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      box-shadow: 0 10px 25px rgba(72, 202, 228, 0.3);
+      transition: transform 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .scanner-btn:active { transform: scale(0.95); }
     
-    .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
-    .btn { background: var(--primary); color: white; padding: 12px 22px; border-radius: 50px; text-decoration: none; font-family: 'Fredoka', sans-serif; transition: 0.3s; }
-    .btn:hover { background: #bc8a5f; }
-    .btn-secondary { background: transparent; color: var(--text-main); border: 2px solid #e9e3df; }
-    .btn-secondary:hover { background: #faf8f6; }
+    /* Hold Progress Ring */
+    .progress-ring {
+      position: absolute;
+      top: -6px; left: -6px;
+      width: 114px; height: 114px;
+      border-radius: 50%;
+      border: 4px solid transparent;
+      border-top-color: var(--mint-dark);
+      border-right-color: var(--turquoise-dark);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .scanner-btn.holding .progress-ring {
+      opacity: 1;
+      animation: rotateRing 2s linear forwards;
+    }
+    @keyframes rotateRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .hold-hint {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--turquoise-dark);
+      margin-top: 15px;
+    }
+
+    /* Common Buttons */
+    .action-btn {
+      background: linear-gradient(135deg, var(--mint-dark), var(--turquoise-main));
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(82, 194, 163, 0.35);
+      width: 100%;
+      margin-top: 5px;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(72, 202, 228, 0.45);
+    }
+
+    /* Status Message Toast */
+    .toast-msg {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--error-red);
+      min-height: 20px;
+      margin-top: 8px;
+    }
+
+    /* Final Success Unlocked View */
+    .success-card {
+      display: none;
+      animation: fadeIn 0.6s ease forwards;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Our Best Memories 🎞️</h1>
+
+  <!-- Background Glowing Bubbles -->
+  <div class="bg-bubble bubble-1"></div>
+  <div class="bg-bubble bubble-2"></div>
+
+  <div class="verification-container" id="mainContainer">
     
-    <div class="gallery-grid">
-      <div class="polaroid">
-        <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400" alt="Memory">
-        <p>Memory #1 ✨</p>
-      </div>
-      <div class="polaroid">
-        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400" alt="Memory">
-        <p>Crazy Days 🤍</p>
+    <!-- Top Progress Bar -->
+    <div class="step-indicator" id="stepIndicator">Step 1 of 3: Checkbox</div>
+    <div class="progress-bar-container">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- STEP 1: IDENTITY CHECKBOX                      -->
+    <!-- ============================================== -->
+    <div class="step-card active" id="step1">
+      <h2>Prove You Are Gauri 🤖</h2>
+      <p class="instructions">Click the security checkbox below to initiate identity scan.</p>
+
+      <div class="captcha-box" onclick="runStep1()">
+        <div class="checkbox-left">
+          <div class="custom-check" id="check1">
+            <div class="spinner" id="spinner1"></div>
+            <div class="checkmark" id="mark1">✓</div>
+          </div>
+          <div class="captcha-label" id="label1">I am Gauri (aka Gabbu / gigi)</div>
+        </div>
+        <div class="captcha-badge">👑</div>
       </div>
     </div>
 
-    <div class="joke-box">
-      <h3>1. The Secret Code 🤫</h3>
-      <p style="font-size: 0.85rem; margin-top: 5px;">You know exactly what this means, Gabbu!</p>
+    <!-- ============================================== -->
+    <!-- STEP 2: GAURI'S LOVES CAPTCHA                  -->
+    <!-- ============================================== -->
+    <div class="step-card" id="step2">
+      <h2>Things Gauri Loves 🌸</h2>
+      <p class="instructions">Select <b>ONLY</b> the things Gauri loves to pass this test!</p>
+
+      <div class="captcha-grid">
+        <!-- LOVES -->
+        <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
+          <div class="item-icon">🫓</div>
+          <div class="item-name">Crispy Dosa</div>
+        </div>
+        
+        <!-- TRAP -->
+        <div class="grid-item" data-love="false" onclick="toggleSelect(this)">
+          <div class="item-icon">⏰</div>
+          <div class="item-name">Waking Up Early</div>
+        </div>
+
+        <!-- LOVES -->
+        <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
+          <div class="item-icon">🍫</div>
+          <div class="item-name">Warm Brownie</div>
+        </div>
+
+        <!-- TRAP -->
+        <div class="grid-item" data-love="false" onclick="toggleSelect(this)">
+          <div class="item-icon">📚</div>
+          <div class="item-name">Boring Homework</div>
+        </div>
+
+        <!-- LOVES -->
+        <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
+          <div class="item-icon">😴</div>
+          <div class="item-name">Extra Sleep</div>
+        </div>
+
+        <!-- LOVES -->
+        <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
+          <div class="item-icon">💅</div>
+          <div class="item-name">Juicy Drama</div>
+        </div>
+      </div>
+
+      <button class="action-btn" onclick="verifyStep2()">Verify Selections ➔</button>
+      <div class="toast-msg" id="toastMsg"></div>
     </div>
-    
-    <div class="nav-buttons">
-      <a href="index.html" class="btn btn-secondary">❮ Back</a>
-      <a href="page3.html" class="btn">Next Page ❯</a>
+
+    <!-- ============================================== -->
+    <!-- STEP 3: BIOMETRIC SCANNER                      -->
+    <!-- ============================================== -->
+    <div class="step-card" id="step3">
+      <h2>Royalty Biometrics 👑</h2>
+      <p class="instructions">Press and <b>HOLD</b> the scanner for 2 seconds to confirm Queen Status.</p>
+
+      <div class="scanner-wrapper">
+        <div class="scanner-btn" id="scannerBtn" 
+             onmousedown="startHold()" onmouseup="endHold()" onmouseleave="endHold()"
+             ontouchstart="startHold()" ontouchend="endHold()">
+          <div class="progress-ring"></div>
+          <span>👆</span>
+        </div>
+        <div class="hold-hint" id="holdHint">Hold Finger Here</div>
+      </div>
     </div>
+
+    <!-- ============================================== -->
+    <!-- SUCCESS / UNLOCKED VIEW                       -->
+    <!-- ============================================== -->
+    <div class="success-card" id="successView">
+      <h2>Access Granted! ✨</h2>
+      <p class="instructions">Identity 100% verified! Welcome Gabbu.</p>
+      <p style="font-size: 1.1rem; margin-bottom: 25px; font-weight: 700; color: var(--turquoise-dark);">
+        Your Birthday Surprises are Unlocked! 🎁
+      </p>
+      <a href="page3.html" class="action-btn" style="text-decoration: none; display: inline-block;">
+        Enter Birthday Stash ➔
+      </a>
+    </div>
+
   </div>
+
+  <script>
+    let currentStep = 1;
+    let holdTimer = null;
+
+    // ----------------------------------
+    // STEP 1 LOGIC
+    // ----------------------------------
+    function runStep1() {
+      const spinner = document.getElementById('spinner1');
+      const mark = document.getElementById('mark1');
+      const label = document.getElementById('label1');
+
+      spinner.style.display = 'block';
+      
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        mark.style.display = 'block';
+        label.textContent = "Verified Gauri! ✨";
+        label.style.color = "var(--turquoise-dark)";
+
+        // Small confetti pop
+        confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 }, colors: ['#a8e6cf', '#48cae4', '#ffffff'] });
+
+        // Transition to Step 2
+        setTimeout(() => {
+          goToStep(2);
+        }, 800);
+
+      }, 1200);
+    }
+
+    // ----------------------------------
+    // STEP 2 LOGIC
+    // ----------------------------------
+    function toggleSelect(element) {
+      element.classList.toggle('selected');
+      document.getElementById('toastMsg').textContent = '';
+    }
+
+    function verifyStep2() {
+      const items = document.querySelectorAll('.grid-item');
+      let failed = false;
+
+      items.forEach(item => {
+        const isLove = item.getAttribute('data-love') === 'true';
+        const isSelected = item.classList.contains('selected');
+
+        // If user picked a trap, OR missed a love item
+        if ((isLove && !isSelected) || (!isLove && isSelected)) {
+          failed = true;
+        }
+      });
+
+      if (failed) {
+        const container = document.getElementById('mainContainer');
+        const toast = document.getElementById('toastMsg');
+        
+        container.classList.add('shake');
+        toast.textContent = "Oops! You selected something Gauri hates or missed a favorite! Try again 😉";
+        
+        setTimeout(() => container.classList.remove('shake'), 400);
+      } else {
+        // Success Step 2
+        confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 }, colors: ['#a8e6cf', '#48cae4', '#ffd166'] });
+        goToStep(3);
+      }
+    }
+
+    // ----------------------------------
+    // STEP 3 LOGIC (SCANNER)
+    // ----------------------------------
+    function startHold() {
+      const btn = document.getElementById('scannerBtn');
+      const hint = document.getElementById('holdHint');
+
+      btn.classList.add('holding');
+      hint.textContent = "Scanning Biometrics...";
+      hint.style.color = "var(--mint-dark)";
+
+      holdTimer = setTimeout(() => {
+        // Successfully Held for 2 Seconds!
+        btn.classList.remove('holding');
+        hint.textContent = "SCAN COMPLETE! 🎉";
+        
+        // Massive Celebration Confetti
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.5 },
+          colors: ['#a8e6cf', '#48cae4', '#0096c7', '#ffffff', '#ffd166']
+        });
+
+        // Show Unlocked Success View
+        setTimeout(() => {
+          document.getElementById('step3').style.display = 'none';
+          document.getElementById('stepIndicator').style.display = 'none';
+          document.querySelector('.progress-bar-container').style.display = 'none';
+          document.getElementById('successView').style.display = 'block';
+        }, 600);
+
+      }, 2000); // 2 Seconds
+    }
+
+    function endHold() {
+      if (holdTimer) {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+        const btn = document.getElementById('scannerBtn');
+        const hint = document.getElementById('holdHint');
+        btn.classList.remove('holding');
+        hint.textContent = "Hold Finger Here";
+        hint.style.color = "var(--turquoise-dark)";
+      }
+    }
+
+    // Helper: Step Navigator
+    function goToStep(stepNum) {
+      document.getElementById(`step${currentStep}`).classList.remove('active');
+      currentStep = stepNum;
+      
+      const nextCard = document.getElementById(`step${currentStep}`);
+      nextCard.classList.add('active');
+
+      // Update UI Progress Bar
+      const progressFill = document.getElementById('progressFill');
+      const stepIndicator = document.getElementById('stepIndicator');
+
+      if (stepNum === 2) {
+        progressFill.style.width = '66.66%';
+        stepIndicator.textContent = 'Step 2 of 3: Favorites Test';
+      } else if (stepNum === 3) {
+        progressFill.style.width = '100%';
+        stepIndicator.textContent = 'Step 3 of 3: Royalty Biometrics';
+      }
+    }
+  </script>
 </body>
 </html>
