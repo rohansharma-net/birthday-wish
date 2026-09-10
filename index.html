@@ -11,7 +11,7 @@
   <style>
     :root {
       --bg-color: #fdf0ed;
-      --card-bg: rgba(255, 255, 255, 0.93);
+      --card-bg: rgba(255, 255, 255, 0.95);
       --primary: #ff8fa3;
       --primary-hover: #ff758f;
       --text-main: #4a4e69;
@@ -30,7 +30,25 @@
       position: relative;
     }
 
-    /* Floating Balloons & Hearts Container */
+    /* ---------------------------------- */
+    /* 1. FULLSCREEN SPLASH OVERLAY       */
+    /* ---------------------------------- */
+    #splashOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: var(--bg-color);
+      z-index: 9999;
+      pointer-events: none;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+      overflow: hidden;
+    }
+    #splashOverlay.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* Floating Balloons & Hearts Styles */
     .decoration {
       position: fixed;
       cursor: pointer;
@@ -39,9 +57,12 @@
       transition: transform 0.15s ease-out, opacity 0.15s ease-out;
       will-change: transform;
     }
+    .splash-item {
+      z-index: 10000;
+    }
     .balloon {
-      width: 44px;
-      height: 54px;
+      width: 46px;
+      height: 56px;
       background-color: #ffb3c1;
       border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
       box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
@@ -57,7 +78,7 @@
       background: rgba(0,0,0,0.15);
     }
     .heart {
-      font-size: 1.9rem;
+      font-size: 2rem;
       filter: drop-shadow(0 4px 6px rgba(255, 143, 163, 0.4));
     }
     .popped {
@@ -65,33 +86,16 @@
       opacity: 0 !important;
     }
 
-    /* Natural Sway & Float Animations across full screen */
-    @keyframes floatFull {
-      0% {
-        transform: translateY(108vh) translateX(0) rotate(0deg);
-        opacity: 0.95;
-      }
-      50% {
-        transform: translateY(50vh) translateX(var(--sway)) rotate(15deg);
-      }
-      100% {
-        transform: translateY(-18vh) translateX(calc(var(--sway) * -1)) rotate(-15deg);
-        opacity: 0.25;
-      }
+    /* Animation Keyframes */
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0.95; }
+      50% { transform: translateY(50vh) translateX(var(--sway)) rotate(15deg); }
+      100% { transform: translateY(-20vh) translateX(calc(var(--sway) * -1)) rotate(-15deg); opacity: 0.2; }
     }
 
-    @keyframes floatDiagonal {
-      0% {
-        transform: translate(var(--startX), var(--startY)) rotate(0deg);
-        opacity: 0.95;
-      }
-      100% {
-        transform: translate(var(--endX), var(--endY)) rotate(180deg);
-        opacity: 0.2;
-      }
-    }
-
-    /* Main Card */
+    /* ---------------------------------- */
+    /* 2. MAIN PAGE CARD                  */
+    /* ---------------------------------- */
     .card {
       background: var(--card-bg);
       backdrop-filter: blur(10px);
@@ -104,11 +108,17 @@
       z-index: 10;
       position: relative;
       border: 1px solid rgba(255, 255, 255, 0.8);
-      animation: fadeIn 0.8s ease-out;
+      
+      /* Hidden initially during splash screen */
+      opacity: 0;
+      transform: scale(0.88);
+      pointer-events: none;
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.94); }
-      to { opacity: 1; transform: scale(1); }
+    .card.show {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
     }
     
     h1 { font-family: 'Fredoka', sans-serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; }
@@ -163,7 +173,7 @@
       100% { opacity: 0; transform: translateY(-30px) scale(2.5); filter: blur(3px); }
     }
 
-    /* Gust of Wind Particles */
+    /* Wind Gust Animation */
     .wind-gust {
       position: absolute;
       font-size: 2.2rem;
@@ -233,9 +243,12 @@
 </head>
 <body>
 
-  <!-- Main Content Card -->
-  <div class="card">
-    <h1>Happy Birthday Gauri! 🐸</h1>
+  <!-- Fullscreen Initial Splash Container (Active for first 2.5s) -->
+  <div id="splashOverlay"></div>
+
+  <!-- Main Content Card (Page 1) -->
+  <div class="card" id="mainCard">
+    <h1>Happy Birthday Gauri! ✨</h1>
 
     <div class="cake-container">
       <div class="wind-gust" id="windGust">💨💨</div>
@@ -257,7 +270,78 @@
   </div>
 
   <script>
-    // 1. Countdown Logic
+    const colors = ['#ffb3c1', '#c1d3fe', '#bde0fe', '#ffc2d1', '#fcf6bd', '#ff8fa3', '#e8aeb7', '#cdb4db'];
+    const icons = ['💖', '✨', '🌸', '🤍', '⭐', '🎈', '💕', '🎂', '🥳', '💌'];
+
+    // 1. Initial 2.5-second Fullscreen Splash Burst
+    function startSplashSequence() {
+      const splash = document.getElementById('splashOverlay');
+      const card = document.getElementById('mainCard');
+      const totalSplashItems = 85; // High density to cover entire screen
+
+      for (let i = 0; i < totalSplashItems; i++) {
+        const el = document.createElement('div');
+        const isBalloon = Math.random() > 0.45;
+        
+        el.className = 'decoration splash-item ' + (isBalloon ? 'balloon' : 'heart');
+
+        if (isBalloon) {
+          el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        } else {
+          el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        }
+
+        // Scatter across screen width (1vw to 96vw)
+        el.style.left = `${Math.random() * 95 + 1}vw`;
+        el.style.setProperty('--sway', `${(Math.random() - 0.5) * 120}px`);
+
+        // Fast floating speed for splash phase
+        const speed = Math.random() * 2 + 2; // 2s to 4s
+        el.style.animation = `floatUp ${speed}s linear infinite`;
+        el.style.animationDelay = `-${Math.random() * speed}s`;
+
+        splash.appendChild(el);
+      }
+
+      // Exact 2.5 Seconds Delay before Page 1 reveals
+      setTimeout(() => {
+        splash.classList.add('hide');
+        card.classList.add('show');
+        initBackgroundDecorations(); // Start permanent interactive background
+      }, 2500);
+    }
+
+    // 2. Interactive Background Balloons & Hearts after Page 1 opens
+    function initBackgroundDecorations() {
+      for (let i = 0; i < 35; i++) {
+        const el = document.createElement('div');
+        const isBalloon = Math.random() > 0.45;
+        
+        el.className = 'decoration ' + (isBalloon ? 'balloon' : 'heart');
+
+        if (isBalloon) {
+          el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          el.onclick = function(e) {
+            e.stopPropagation();
+            this.classList.add('popped');
+            setTimeout(() => this.remove(), 200);
+          };
+        } else {
+          el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        }
+
+        el.style.left = `${Math.random() * 94 + 2}vw`;
+        el.style.setProperty('--sway', `${(Math.random() - 0.5) * 80}px`);
+
+        const duration = Math.random() * 4 + 5; // 5s to 9s
+        el.style.animation = `floatUp ${duration}s linear infinite`;
+        el.style.animationDelay = `-${Math.random() * duration}s`;
+
+        document.body.appendChild(el);
+      }
+    }
+
+    // 3. Countdown Logic
     function updateCountdown() {
       const now = new Date();
       let targetYear = now.getFullYear();
@@ -276,7 +360,7 @@
     }
     setInterval(updateCountdown, 1000); updateCountdown();
 
-    // 2. Windy Candle Blow with Glittery Stars
+    // 4. Windy Candle Blow with Star Confetti Burst
     let isBlown = false;
     function blowCandles() {
       if (isBlown) return;
@@ -310,74 +394,7 @@
       }, 400);
     }
 
-    // 3. Full Screen Scattered Generator (All edges & corners, zero lines)
-    function fillScreenCompletely() {
-      const colors = ['#ffb3c1', '#c1d3fe', '#bde0fe', '#ffc2d1', '#fcf6bd', '#ff8fa3', '#e8aeb7', '#cdb4db'];
-      const icons = ['💖', '✨', '🌸', '🤍', '⭐', '🎈', '💕', '🎂', '🥳', '💌'];
-      
-      const totalElements = 80; // High density filling entire screen
-
-      for (let i = 0; i < totalElements; i++) {
-        const el = document.createElement('div');
-        const isBalloon = Math.random() > 0.45;
-        
-        el.className = 'decoration ' + (isBalloon ? 'balloon' : 'heart');
-
-        if (isBalloon) {
-          el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-          el.onclick = function(e) {
-            e.stopPropagation();
-            this.classList.add('popped');
-            setTimeout(() => this.remove(), 200);
-          };
-        } else {
-          el.textContent = icons[Math.floor(Math.random() * icons.length)];
-        }
-
-        // 70% elements float straight up scattered across width (0vw to 95vw)
-        // 30% elements fly diagonally across corners with random offsets
-        if (Math.random() < 0.7) {
-          el.style.left = `${Math.random() * 94 + 2}vw`;
-          el.style.setProperty('--sway', `${(Math.random() - 0.5) * 100}px`);
-          
-          const duration = Math.random() * 4 + 4; // 4s to 8s
-          el.style.animation = `floatFull ${duration}s linear infinite`;
-          // Negative delay ensures screen is INSTANTLY filled when page opens!
-          el.style.animationDelay = `-${Math.random() * duration}s`;
-        } else {
-          // Diagonal flying from random edges/corners
-          const corner = Math.floor(Math.random() * 4);
-          let startX, startY, endX, endY;
-
-          if (corner === 0) { // Top Left
-            startX = `${Math.random() * -20}vw`; startY = `${Math.random() * -20}vh`;
-            endX = `${Math.random() * 50 + 70}vw`; endY = `${Math.random() * 50 + 70}vh`;
-          } else if (corner === 1) { // Top Right
-            startX = `${Math.random() * 20 + 100}vw`; startY = `${Math.random() * -20}vh`;
-            endX = `${Math.random() * -50 + 30}vw`; endY = `${Math.random() * 50 + 70}vh`;
-          } else if (corner === 2) { // Bottom Left
-            startX = `${Math.random() * -20}vw`; startY = `${Math.random() * 20 + 100}vh`;
-            endX = `${Math.random() * 50 + 70}vw`; endY = `${Math.random() * -50 + 30}vh`;
-          } else { // Bottom Right
-            startX = `${Math.random() * 20 + 100}vw`; startY = `${Math.random() * 20 + 100}vh`;
-            endX = `${Math.random() * -50 + 30}vw`; endY = `${Math.random() * -50 + 30}vh`;
-          }
-
-          el.style.setProperty('--startX', startX);
-          el.style.setProperty('--startY', startY);
-          el.style.setProperty('--endX', endX);
-          el.style.setProperty('--endY', endY);
-
-          const duration = Math.random() * 3 + 3; // 3s to 6s
-          el.style.animation = `floatDiagonal ${duration}s linear infinite`;
-          el.style.animationDelay = `-${Math.random() * duration}s`;
-        }
-
-        document.body.appendChild(el);
-      }
-    }
-
-    window.onload = fillScreenCompletely;
+    window.onload = startSplashSequence;
   </script>
 </body>
 </html>
