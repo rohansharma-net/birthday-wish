@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Grand Finale 👑 - Gauri's Special Realm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --mint-light: #e8f8f5;
+      --mint-main: #a8e6cf;
+      --mint-dark: #52c2a3;
+      --turquoise-light: #e0f7fa;
+      --turquoise-main: #48cae4;
+      --turquoise-dark: #0096c7;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-color: #2b3a42;
+      --bg-gradient: linear-gradient(135deg, #e8f8f5 0%, #e0f7fa 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px 60px 15px;
+      overflow-x: hidden;
+      position: relative;
+      transition: background 0.5s ease;
+    }
+
+    /* Floating Background Bubbles */
+    .bg-bubble {
+      position: fixed;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--mint-main), var(--turquoise-main));
+      opacity: 0.2;
+      filter: blur(25px);
+      z-index: 0;
+      animation: floatBg 8s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+    .bubble-1 { width: 300px; height: 300px; top: -80px; left: -80px; }
+    .bubble-2 { width: 350px; height: 350px; bottom: -100px; right: -80px; animation-delay: -4s; }
+
+    @keyframes floatBg {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(50px) scale(1.1); }
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 650px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+    }
+
+    /* Page Header */
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(72, 202, 228, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+    .header-card h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.2rem;
+      color: var(--turquoise-dark);
+      margin-bottom: 6px;
+    }
+    .header-card p {
+      font-size: 1rem;
+      color: #5a737d;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.35rem;
+      color: var(--turquoise-dark);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border-radius: 28px;
+      padding: 28px 22px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 15px 35px rgba(72, 202, 228, 0.18);
+      text-align: center;
+    }
+
+    /* ============================================== */
+    /* FEATURE 1: GAURI MOOD REGULATOR DIAL           */
+    /* ============================================== */
+    .mood-dial-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .mood-btn {
+      background: white;
+      border: 2px solid var(--mint-main);
+      padding: 12px;
+      border-radius: 16px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-color);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .mood-btn:hover, .mood-btn.active {
+      background: var(--turquoise-light);
+      border-color: var(--turquoise-dark);
+      color: var(--turquoise-dark);
+      transform: translateY(-2px);
+    }
+    .mood-status-box {
+      margin-top: 18px;
+      padding: 14px;
+      background: rgba(232, 248, 245, 0.6);
+      border-radius: 16px;
+      font-weight: 700;
+      color: var(--turquoise-dark);
+      font-size: 0.95rem;
+    }
+
+    /* ============================================== */
+    /* FEATURE 2: GAURI'S YEAR AHEAD FORTUNE WHEEL   */
+    /* ============================================== */
+    .wheel-wrapper {
+      position: relative;
+      width: 230px;
+      height: 230px;
+      margin: 15px auto 20px auto;
+    }
+    .wheel-pointer {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.8rem;
+      z-index: 20;
+    }
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 6px solid var(--turquoise-dark);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.35, 1.02);
+      background: conic-gradient(
+        #a8e6cf 0deg 60deg,
+        #48cae4 60deg 120deg,
+        #b9fbc0 120deg 180deg,
+        #90e0ef 180deg 240deg,
+        #52c2a3 240deg 300deg,
+        #0096c7 300deg 360deg
+      );
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .wheel-center-cap {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      border: 3px solid var(--turquoise-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      z-index: 10;
+    }
+    .fortune-result {
+      min-height: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.05rem;
+      color: var(--turquoise-dark);
+      margin-top: 10px;
+    }
+
+    /* ============================================== */
+    /* FEATURE 3: FRIENDSHIP CONSTELLATION MAP        */
+    /* ============================================== */
+    .constellation-box {
+      background: #0f2b38;
+      border-radius: 22px;
+      height: 230px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+    .star {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 12px #48cae4, 0 0 20px #ffffff;
+      transition: transform 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.75rem;
+      animation: pulseStar 2s infinite alternate;
+    }
+    .star:hover { transform: scale(1.4); }
+    @keyframes pulseStar {
+      0% { box-shadow: 0 0 8px #48cae4; }
+      100% { box-shadow: 0 0 18px #ffffff, 0 0 25px #a8e6cf; }
+    }
+    /* Constellation Dotted Line Overlay */
+    .constellation-svg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    /* ============================================== */
+    /* FEATURE 4: FLOATING WISH LANTERN RELEASE       */
+    /* ============================================== */
+    .lantern-sky {
+      background: linear-gradient(180deg, #0b1d28 0%, #1a3d52 100%);
+      border-radius: 22px;
+      height: 240px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 15px;
+    }
+    .wish-input-row {
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .wish-input-row input {
+      flex-grow: 1;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 50px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .wish-input-row button {
+      background: var(--turquoise-main);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .flying-lantern {
+      position: absolute;
+      font-size: 2rem;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: all 4s ease-out;
+      pointer-events: none;
+    }
+    .flying-lantern.launch {
+      bottom: 210px;
+      opacity: 1;
+      transform: translateX(-50%) scale(0.4);
+      filter: drop-shadow(0 0 15px #ffd166);
+    }
+
+    /* ============================================== */
+    /* FEATURE 5: INTERACTIVE CANDLE CAKE (FINALE)   */
+    /* ============================================== */
+    .cake-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 15px;
+    }
+    .cake {
+      width: 180px;
+      height: 110px;
+      background: linear-gradient(135deg, var(--mint-main), var(--turquoise-main));
+      border-radius: 20px 20px 10px 10px;
+      position: relative;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      border-bottom: 8px solid var(--turquoise-dark);
+    }
+    .cake-frosting {
+      width: 100%;
+      height: 30px;
+      background: #ffffff;
+      border-radius: 20px 20px 12px 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    .candles-row {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      position: absolute;
+      top: -30px;
+      width: 100%;
+    }
+    .candle {
+      width: 10px;
+      height: 30px;
+      background: repeating-linear-gradient(45deg, #ff99c8, #ff99c8 5px, #ffffff 5px, #ffffff 10px);
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+    .flame {
+      width: 12px;
+      height: 18px;
+      background: radial-gradient(circle, #ffea00 0%, #ff6b00 100%);
+      border-radius: 50% 50% 35% 35%;
+      position: absolute;
+      top: -18px;
+      left: -1px;
+      box-shadow: 0 0 10px #ffea00;
+      animation: flicker 0.6s infinite alternate;
+      transition: opacity 0.3s;
+    }
+    .flame.off {
+      opacity: 0;
+      animation: none;
+    }
+    @keyframes flicker {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.15) rotate(2deg); }
+    }
+
+    /* General Buttons & Modals */
+    .action-btn {
+      background: linear-gradient(135deg, var(--mint-dark), var(--turquoise-main));
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 20px rgba(82, 194, 163, 0.35);
+      margin-top: 10px;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(72, 202, 228, 0.45);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 1000;
+      opacity: 0; pointer-events: none; transition: 0.3s ease;
+      padding: 20px;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    
+    .modal-content {
+      background: white; width: 100%; max-width: 420px;
+      border-radius: 26px; padding: 30px 22px;
+      text-align: center; position: relative;
+      transform: scale(0.85); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      border: 3px solid var(--mint-main);
+    }
+    .modal-overlay.active .modal-content { transform: scale(1); }
+    
+    .close-btn {
+      position: absolute; top: 15px; right: 18px;
+      font-size: 1.5rem; color: #aaa; cursor: pointer; border: none; background: none; font-weight: bold;
+    }
+    .modal-title { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; color: var(--turquoise-dark); margin-bottom: 12px; }
+    .modal-body { font-size: 0.98rem; line-height: 1.5; color: var(--text-color); }
+  </style>
+</head>
+<body>
+
+  <div class="bg-bubble bubble-1"></div>
+  <div class="bg-bubble bubble-2"></div>
+
+  <div class="main-container">
+    
+    <!-- Header -->
+    <div class="header-card">
+      <h1>The Grand Finale 👑</h1>
+      <p>A magical space crafted specially for Gauri!</p>
+    </div>
+
+    <!-- FEATURE 1: GAURI MOOD REGULATOR DIAL -->
+    <div class="feature-card">
+      <div class="section-title"><span>🎛️</span> <span>Gauri Mood Regulator</span></div>
+      <p style="font-size:0.88rem; color:#6c757d;">Set your current vibe to tune the page ambiance!</p>
+      
+      <div class="mood-dial-grid">
+        <button class="mood-btn active" onclick="setMood('queen', this)">👑 Royal Queen</button>
+        <button class="mood-btn" onclick="setMood('cozy', this)">☕ Peaceful & Cozy</button>
+        <button class="mood-btn" onclick="setMood('sassy', this)">✨ Sassy Energy</button>
+        <button class="mood-btn" onclick="setMood('thinker', this)">💡 Deep Thinker</button>
+      </div>
+
+      <div class="mood-status-box" id="moodStatus">
+        Vibe Set: Royal Queen 👑 — "Maximum confidence, effortless grace, and unstoppable aura!"
+      </div>
+    </div>
+
+    <!-- FEATURE 2: GAURI'S YEAR AHEAD FORTUNE WHEEL -->
+    <div class="feature-card">
+      <div class="section-title"><span>🔮</span> <span>The "Year Ahead" Fortune Wheel</span></div>
+      <p style="font-size:0.88rem; color:#6c757d;">Spin the wheel to unlock your prophecy for this year!</p>
+
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer">🔻</div>
+        <div class="wheel" id="wheel">
+          <div class="wheel-center-cap">✨</div>
+        </div>
+      </div>
+
+      <button class="action-btn" onclick="spinWheel()">Spin Wheel 🎡</button>
+      <div class="fortune-result" id="fortuneResult">Click spin to reveal your fortune!</div>
+    </div>
+
+    <!-- FEATURE 3: FRIENDSHIP CONSTELLATION MAP -->
+    <div class="feature-card">
+      <div class="section-title"><span>✨</span> <span>The Friendship Constellation</span></div>
+      <p style="font-size:0.88rem; color:#6c757d;">Tap the glowing stars to reveal your special qualities!</p>
+
+      <div class="constellation-box">
+        <svg class="constellation-svg">
+          <line x1="20%" y1="30%" x2="45%" y2="25%" stroke="rgba(255,255,255,0.3)" stroke-dasharray="4" />
+          <line x1="45%" y1="25%" x2="75%" y2="40%" stroke="rgba(255,255,255,0.3)" stroke-dasharray="4" />
+          <line x1="75%" y1="40%" x2="55%" y2="75%" stroke="rgba(255,255,255,0.3)" stroke-dasharray="4" />
+          <line x1="55%" y1="75%" x2="25%" y2="65%" stroke="rgba(255,255,255,0.3)" stroke-dasharray="4" />
+        </svg>
+
+        <div class="star" style="top: 30%; left: 20%;" onclick="openStar('Star 1: Unfiltered Honesty 💎', 'You always give clear, genuine advice when it matters most. Your honesty is pure platinum.')">🌟</div>
+        <div class="star" style="top: 25%; left: 45%;" onclick="openStar('Star 2: Effortless Style 🎨', 'Your sense of aesthetics, vintage charm, and unique taste make you naturally iconic.')">🌟</div>
+        <div class="star" style="top: 40%; left: 75%;" onclick="openStar('Star 3: Steadfast Loyalty 🛡️', 'You hold space for your friends and have an unshakable loyalty that never fades.')">🌟</div>
+        <div class="star" style="top: 75%; left: 55%;" onclick="openStar('Star 4: Radiant Warmth ☀️', 'Your sense of humor and energy can lift anyone\'s mood in seconds.')">🌟</div>
+        <div class="star" style="top: 65%; left: 25%;" onclick="openStar('Star 5: Deep Wisdom 🧠', 'The best late-night chats and deep perspective always come from you.')">🌟</div>
+      </div>
+    </div>
+
+    <!-- FEATURE 4: FLOATING WISH LANTERN RELEASE -->
+    <div class="feature-card">
+      <div class="section-title"><span>🏮</span> <span>Floating Wish Lantern</span></div>
+      <p style="font-size:0.88rem; color:#6c757d;">Type a wish for your new age and release it into the sky!</p>
+
+      <div class="lantern-sky">
+        <div class="flying-lantern" id="flyingLantern">🏮</div>
+        <div class="wish-input-row">
+          <input type="text" id="wishInput" placeholder="Make a wish, Gabbu..." />
+          <button onclick="launchLantern()">Launch 🚀</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 5: INTERACTIVE CANDLE CAKE (FINALE) -->
+    <div class="feature-card">
+      <div class="section-title"><span>🕯️</span> <span>Make a Wish & Blow Candles</span></div>
+      <p style="font-size:0.88rem; color:#6c757d;">Tap each candle flame to blow them out!</p>
+
+      <div class="cake-container">
+        <div class="cake">
+          <div class="cake-frosting"></div>
+          <div class="candles-row">
+            <div class="candle" onclick="blowCandle(this)"><div class="flame"></div></div>
+            <div class="candle" onclick="blowCandle(this)"><div class="flame"></div></div>
+            <div class="candle" onclick="blowCandle(this)"><div class="flame"></div></div>
+          </div>
+        </div>
+      </div>
+      <button class="action-btn" onclick="blowAllCandles()" style="margin-top:25px;">Blow All Candles 🌬️</button>
+    </div>
+
+  </div>
+
+  <!-- Shared Modal -->
+  <div class="modal-overlay" id="genModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <div class="modal-title" id="modalTitle">Title</div>
+      <div class="modal-body" id="modalBody">Body content...</div>
+    </div>
+  </div>
+
+  <script>
+    // 1. MOOD REGULATOR DIAL
+    const moodMap = {
+      queen: {
+        bg: "linear-gradient(135deg, #e8f8f5 0%, #e0f7fa 100%)",
+        status: "Vibe Set: Royal Queen 👑 — Maximum confidence, effortless grace, and unstoppable aura!"
+      },
+      cozy: {
+        bg: "linear-gradient(135deg, #e3f2fd 0%, #e8eaf6 100%)",
+        status: "Vibe Set: Peaceful & Cozy ☕ — Soft acoustic tones, calm mind, and zero-stress energy."
+      },
+      sassy: {
+        bg: "linear-gradient(135deg, #f3e5f5 0%, #e0f7fa 100%)",
+        status: "Vibe Set: Sassy Energy ✨ — Quick wit, brilliant banter, and unbothered excellence."
+      },
+      thinker: {
+        bg: "linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%)",
+        status: "Vibe Set: Deep Thinker 💡 — Deep conversations, artistic visions, and endless ideas."
+      }
+    };
+
+    function setMood(key, btn) {
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.body.style.background = moodMap[key].bg;
+      document.getElementById('moodStatus').textContent = moodMap[key].status;
+    }
+
+    // 2. FORTUNE WHEEL LOGIC
+    const fortunes = [
+      "Unstoppable creative wins & major personal growth coming your way! ✨",
+      "A long-cherished dream will subtly come true this year! 🎯",
+      "Endless memorable road trips & aesthetic moments ahead! 🌌",
+      "Zero bad vibes, only high-tier energy & true peace! 🚀",
+      "An unexpected joyful milestone in your near future! 🎁",
+      "Your intuition & wisdom will hit an all-time peak! 💡"
+    ];
+    let currentDegree = 0;
+
+    function spinWheel() {
+      const wheel = document.getElementById('wheel');
+      const randomExtra = Math.floor(Math.random() * 360) + 1440; // At least 4 full rotations
+      currentDegree += randomExtra;
+      wheel.style.transform = `rotate(${currentDegree}deg)`;
+
+      setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * fortunes.length);
+        document.getElementById('fortuneResult').textContent = "✨ Prophecy: " + fortunes[randomIndex];
+        confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
+      }, 3500);
+    }
+
+    // 3. CONSTELLATION STAR MODAL
+    function openStar(title, text) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').textContent = text;
+      document.getElementById('genModal').classList.add('active');
+      confetti({ particleCount: 35, spread: 40, origin: { y: 0.6 } });
+    }
+
+    // 4. FLOATING LANTERN LOGIC
+    function launchLantern() {
+      const wish = document.getElementById('wishInput').value.trim();
+      if (!wish) {
+        alert("Please write a wish first!");
+        return;
+      }
+
+      const lantern = document.getElementById('flyingLantern');
+      lantern.classList.add('launch');
+
+      setTimeout(() => {
+        openStar("Wish Launched into the Stars! 🏮", `Your wish: "${wish}" has been launched into the universe. May it come true this year! ✨`);
+        document.getElementById('wishInput').value = '';
+        setTimeout(() => lantern.classList.remove('launch'), 1000);
+      }, 3500);
+    }
+
+    // 5. INTERACTIVE CANDLE CAKE LOGIC
+    let extinguishedCount = 0;
+
+    function blowCandle(candleElem) {
+      const flame = candleElem.querySelector('.flame');
+      if (!flame.classList.contains('off')) {
+        flame.classList.add('off');
+        extinguishedCount++;
+        checkCakeCompletion();
+      }
+    }
+
+    function blowAllCandles() {
+      document.querySelectorAll('.flame').forEach(flame => {
+        flame.classList.add('off');
+      });
+      extinguishedCount = 3;
+      checkCakeCompletion();
+    }
+
+    function checkCakeCompletion() {
+      if (extinguishedCount >= 3) {
+        confetti({
+          particleCount: 150,
+          spread: 90,
+          origin: { y: 0.5 },
+          colors: ['#a8e6cf', '#48cae4', '#0096c7', '#ffffff', '#ffd166']
+        });
+
+        setTimeout(() => {
+          openStar("Happy Birthday Gauri! 🎉✨", "All candles blown! May your year ahead be filled with infinite happiness, peace, success, and wonderful moments. Stay extraordinary always, Gabbu / gigi! 👑💖");
+        }, 500);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('genModal').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
