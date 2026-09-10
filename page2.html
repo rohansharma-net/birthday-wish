@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Memories 📸 | Page 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg-color: #f4efeb; --card-bg: #ffffff; --primary: #d4a373; --text-main: #4a4e69; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Quicksand', sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    
+    .card { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 20px; padding: 35px 25px; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.08); animation: fadeIn 0.8s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    
+    h1 { font-family: 'Fredoka', sans-serif; color: var(--primary); margin-bottom: 20px; }
+
+    /* Vintage Polaroid Gallery Grid */
+    .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+    .polaroid { background: white; padding: 10px 10px 20px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 4px; transform: rotate(-2deg); transition: transform 0.3s; }
+    .polaroid:nth-child(even) { transform: rotate(3deg); }
+    .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+    .polaroid img { width: 100%; height: 140px; object-fit: cover; filter: contrast(1.1) sepia(0.2); }
+    .polaroid p { font-family: 'Fredoka', sans-serif; font-size: 0.9rem; margin-top: 10px; color: #555; }
+
+    /* Jokes Section */
+    .joke-box { background: #faf8f6; border-left: 4px solid #8f938c; padding: 15px; border-radius: 8px; margin-bottom: 12px; text-align: left; }
+    .joke-box h3 { font-family: 'Fredoka', sans-serif; font-size: 1rem; color: #6b705c; }
+    
+    .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
+    .btn { background: var(--primary); color: white; padding: 12px 22px; border-radius: 50px; text-decoration: none; font-family: 'Fredoka', sans-serif; transition: 0.3s; }
+    .btn:hover { background: #bc8a5f; }
+    .btn-secondary { background: transparent; color: var(--text-main); border: 2px solid #e9e3df; }
+    .btn-secondary:hover { background: #faf8f6; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Our Best Memories 🎞️</h1>
+    
+    <div class="gallery-grid">
+      <div class="polaroid">
+        <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400" alt="Memory">
+        <p>Memory #1 ✨</p>
+      </div>
+      <div class="polaroid">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400" alt="Memory">
+        <p>Crazy Days 🤍</p>
+      </div>
+    </div>
+
+    <div class="joke-box">
+      <h3>1. The Secret Code 🤫</h3>
+      <p style="font-size: 0.85rem; margin-top: 5px;">You know exactly what this means, Gabbu!</p>
+    </div>
+    
+    <div class="nav-buttons">
+      <a href="index.html" class="btn btn-secondary">❮ Back</a>
+      <a href="page3.html" class="btn">Next Page ❯</a>
+    </div>
+  </div>
+</body>
+</html>
