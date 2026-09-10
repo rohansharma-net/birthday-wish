@@ -59,7 +59,7 @@
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       width: 100%;
-      max-width: 460px;
+      max-width: 480px;
       border-radius: 28px;
       padding: 35px 25px;
       text-align: center;
@@ -70,7 +70,7 @@
       transition: all 0.4s ease;
     }
 
-    /* Progress Header */
+    /* Progress Bar Header */
     .progress-bar-container {
       width: 100%;
       height: 8px;
@@ -92,11 +92,10 @@
       color: var(--turquoise-dark);
       text-transform: uppercase;
       letter-spacing: 1.2px;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       font-weight: 600;
     }
 
-    /* Verification Steps Common */
     .step-card {
       display: none;
       animation: fadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -110,59 +109,106 @@
 
     h2 {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       color: var(--turquoise-dark);
       margin-bottom: 8px;
     }
     p.instructions {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #5a737d;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       line-height: 1.4;
     }
 
     /* ---------------------------------- */
-    /* STEP 1: CHECKBOX CAPTCHA           */
+    /* STEP 1: QUIZ & CAPTCHA STYLING     */
     /* ---------------------------------- */
-    .captcha-box {
+    .captcha-row {
       background: #ffffff;
       border: 2px solid var(--mint-main);
       border-radius: 16px;
-      padding: 18px 20px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      margin-bottom: 20px;
+      text-align: left;
     }
-    .captcha-box:hover {
-      border-color: var(--turquoise-main);
-      transform: translateY(-2px);
+    .captcha-row input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--turquoise-dark);
+      cursor: pointer;
     }
-    .checkbox-left { display: flex; align-items: center; gap: 14px; }
-    .custom-check {
-      width: 28px; height: 28px;
-      border: 2px solid var(--mint-dark);
-      border-radius: 8px;
+    .captcha-row label {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--text-color);
+      cursor: pointer;
+      flex-grow: 1;
+      margin-left: 12px;
+    }
+
+    .question-group {
+      text-align: left;
+      margin-bottom: 20px;
+      background: rgba(232, 248, 245, 0.5);
+      padding: 15px;
+      border-radius: 18px;
+      border: 1px solid var(--mint-main);
+    }
+    .question-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--turquoise-dark);
+      margin-bottom: 10px;
+    }
+
+    .title-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .option-btn {
+      background: white;
+      border: 2px solid #e0f7fa;
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-color);
       display: flex;
       align-items: center;
-      justify-content: center;
-      background: white;
-      transition: 0.3s;
+      gap: 10px;
+      transition: all 0.2s ease;
     }
-    .spinner {
-      width: 18px; height: 18px;
-      border: 3px solid var(--mint-light);
-      border-top: 3px solid var(--turquoise-dark);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      display: none;
+    .option-btn:hover { border-color: var(--mint-dark); }
+    .option-btn.selected {
+      border-color: var(--turquoise-dark);
+      background: var(--turquoise-light);
+      color: var(--turquoise-dark);
     }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    .checkmark { color: var(--turquoise-dark); font-size: 1.2rem; display: none; font-weight: bold; }
-    .captcha-label { font-weight: 700; font-size: 1rem; color: var(--text-color); }
-    .captcha-badge { font-size: 1.5rem; }
+
+    /* Excitement Slider */
+    .slider-container {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .excitement-slider {
+      width: 100%;
+      accent-color: var(--turquoise-dark);
+      cursor: pointer;
+    }
+    .slider-val {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.2rem;
+      color: var(--turquoise-dark);
+      margin-top: 6px;
+      font-weight: 700;
+    }
 
     /* ---------------------------------- */
     /* STEP 2: IMAGE / LOVES GRID        */
@@ -170,7 +216,7 @@
     .captcha-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 20px;
     }
     .grid-item {
@@ -187,10 +233,7 @@
       user-select: none;
       position: relative;
     }
-    .grid-item:hover {
-      border-color: var(--mint-dark);
-      transform: scale(1.03);
-    }
+    .grid-item:hover { border-color: var(--mint-dark); transform: scale(1.03); }
     .grid-item.selected {
       border-color: var(--turquoise-main);
       background: var(--turquoise-light);
@@ -208,10 +251,9 @@
       display: flex; justify-content: center; align-items: center;
       font-weight: bold;
     }
-    .item-icon { font-size: 2rem; }
-    .item-name { font-size: 0.8rem; font-weight: 700; color: var(--text-color); }
+    .item-icon { font-size: 1.8rem; }
+    .item-name { font-size: 0.78rem; font-weight: 700; color: var(--text-color); }
 
-    /* Shake animation for wrong selection */
     .shake { animation: shake 0.4s ease-in-out; }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
@@ -246,7 +288,6 @@
     }
     .scanner-btn:active { transform: scale(0.95); }
     
-    /* Hold Progress Ring */
     .progress-ring {
       position: absolute;
       top: -6px; left: -6px;
@@ -294,7 +335,6 @@
       box-shadow: 0 8px 25px rgba(72, 202, 228, 0.45);
     }
 
-    /* Status Message Toast */
     .toast-msg {
       font-size: 0.85rem;
       font-weight: 700;
@@ -303,7 +343,6 @@
       margin-top: 8px;
     }
 
-    /* Final Success Unlocked View */
     .success-card {
       display: none;
       animation: fadeIn 0.6s ease forwards;
@@ -312,35 +351,57 @@
 </head>
 <body>
 
-  <!-- Background Glowing Bubbles -->
   <div class="bg-bubble bubble-1"></div>
   <div class="bg-bubble bubble-2"></div>
 
   <div class="verification-container" id="mainContainer">
     
-    <!-- Top Progress Bar -->
-    <div class="step-indicator" id="stepIndicator">Step 1 of 3: Checkbox</div>
+    <div class="step-indicator" id="stepIndicator">Step 1 of 3: Verification Gate</div>
     <div class="progress-bar-container">
       <div class="progress-fill" id="progressFill"></div>
     </div>
 
     <!-- ============================================== -->
-    <!-- STEP 1: IDENTITY CHECKBOX                      -->
+    <!-- STEP 1: PROVE YOU ARE GAURI GATE               -->
     <!-- ============================================== -->
     <div class="step-card active" id="step1">
       <h2>Prove You Are Gauri 🤖</h2>
-      <p class="instructions">Click the security checkbox below to initiate identity scan.</p>
+      <p class="instructions">Complete the official security check below.</p>
 
-      <div class="captcha-box" onclick="runStep1()">
-        <div class="checkbox-left">
-          <div class="custom-check" id="check1">
-            <div class="spinner" id="spinner1"></div>
-            <div class="checkmark" id="mark1">✓</div>
-          </div>
-          <div class="captcha-label" id="label1">I am Gauri (aka Gabbu / gigi)</div>
-        </div>
-        <div class="captcha-badge">👑</div>
+      <!-- Checkbox -->
+      <div class="captcha-row" onclick="document.getElementById('robotCheck').click()">
+        <input type="checkbox" id="robotCheck" onclick="event.stopPropagation()">
+        <label for="robotCheck">I am not a robot. I am Gauri.</label>
+        <span style="font-size: 1.3rem;">🤖</span>
       </div>
+
+      <!-- Security Question 1: Title -->
+      <div class="question-group">
+        <div class="question-title">Select your official title today:</div>
+        <div class="title-options">
+          <div class="option-btn" onclick="selectTitle(this)">
+            <span>👑</span> <span>The Birthday Queen</span>
+          </div>
+          <div class="option-btn" onclick="selectTitle(this)">
+            <span>🌸</span> <span>Cute & Threatening</span>
+          </div>
+          <div class="option-btn" onclick="selectTitle(this)">
+            <span>🎂</span> <span>Professional Cake Eater</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Question 2: Slider -->
+      <div class="question-group">
+        <div class="question-title">Drag slider to your excitement level:</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="1000" value="0" class="excitement-slider" id="excitementSlider" oninput="lockSlider(this)">
+          <div class="slider-val" id="sliderValue">0%</div>
+        </div>
+      </div>
+
+      <button class="action-btn" onclick="verifyStep1()">Continue ➔</button>
+      <div class="toast-msg" id="toast1"></div>
     </div>
 
     <!-- ============================================== -->
@@ -348,40 +409,29 @@
     <!-- ============================================== -->
     <div class="step-card" id="step2">
       <h2>Things Gauri Loves 🌸</h2>
-      <p class="instructions">Select <b>ONLY</b> the things Gauri loves to pass this test!</p>
+      <p class="instructions">Select <b>ONLY</b> the things Gauri loves to pass!</p>
 
       <div class="captcha-grid">
-        <!-- LOVES -->
         <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
           <div class="item-icon">🫓</div>
           <div class="item-name">Crispy Dosa</div>
         </div>
-        
-        <!-- TRAP -->
         <div class="grid-item" data-love="false" onclick="toggleSelect(this)">
           <div class="item-icon">⏰</div>
           <div class="item-name">Waking Up Early</div>
         </div>
-
-        <!-- LOVES -->
         <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
           <div class="item-icon">🍫</div>
           <div class="item-name">Warm Brownie</div>
         </div>
-
-        <!-- TRAP -->
         <div class="grid-item" data-love="false" onclick="toggleSelect(this)">
           <div class="item-icon">📚</div>
           <div class="item-name">Boring Homework</div>
         </div>
-
-        <!-- LOVES -->
         <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
           <div class="item-icon">😴</div>
           <div class="item-name">Extra Sleep</div>
         </div>
-
-        <!-- LOVES -->
         <div class="grid-item" data-love="true" onclick="toggleSelect(this)">
           <div class="item-icon">💅</div>
           <div class="item-name">Juicy Drama</div>
@@ -389,7 +439,7 @@
       </div>
 
       <button class="action-btn" onclick="verifyStep2()">Verify Selections ➔</button>
-      <div class="toast-msg" id="toastMsg"></div>
+      <div class="toast-msg" id="toast2"></div>
     </div>
 
     <!-- ============================================== -->
@@ -411,7 +461,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- SUCCESS / UNLOCKED VIEW                       -->
+    <!-- SUCCESS UNLOCKED VIEW                         -->
     <!-- ============================================== -->
     <div class="success-card" id="successView">
       <h2>Access Granted! ✨</h2>
@@ -428,41 +478,49 @@
 
   <script>
     let currentStep = 1;
+    let selectedTitle = false;
     let holdTimer = null;
 
-    // ----------------------------------
-    // STEP 1 LOGIC
-    // ----------------------------------
-    function runStep1() {
-      const spinner = document.getElementById('spinner1');
-      const mark = document.getElementById('mark1');
-      const label = document.getElementById('label1');
-
-      spinner.style.display = 'block';
-      
-      setTimeout(() => {
-        spinner.style.display = 'none';
-        mark.style.display = 'block';
-        label.textContent = "Verified Gauri! ✨";
-        label.style.color = "var(--turquoise-dark)";
-
-        // Small confetti pop
-        confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 }, colors: ['#a8e6cf', '#48cae4', '#ffffff'] });
-
-        // Transition to Step 2
-        setTimeout(() => {
-          goToStep(2);
-        }, 800);
-
-      }, 1200);
+    // STEP 1 UI HANDLERS
+    function selectTitle(element) {
+      document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+      selectedTitle = true;
+      document.getElementById('toast1').textContent = '';
     }
 
-    // ----------------------------------
+    function lockSlider(slider) {
+      // Locked so any drag movement automatically forces value to 1000%
+      slider.value = 1000;
+      document.getElementById('sliderValue').textContent = "1000% 🔥 (MAX OVERLOAD)";
+    }
+
+    function verifyStep1() {
+      const isChecked = document.getElementById('robotCheck').checked;
+      const sliderVal = document.getElementById('excitementSlider').value;
+      const toast = document.getElementById('toast1');
+
+      if (!isChecked) {
+        toast.textContent = "Please check 'I am not a robot. I am Gauri'!";
+        return;
+      }
+      if (!selectedTitle) {
+        toast.textContent = "Please select your official title today!";
+        return;
+      }
+      if (sliderVal < 1000) {
+        toast.textContent = "Drag the slider to boost your excitement level!";
+        return;
+      }
+
+      confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 }, colors: ['#a8e6cf', '#48cae4', '#ffffff'] });
+      goToStep(2);
+    }
+
     // STEP 2 LOGIC
-    // ----------------------------------
     function toggleSelect(element) {
       element.classList.toggle('selected');
-      document.getElementById('toastMsg').textContent = '';
+      document.getElementById('toast2').textContent = '';
     }
 
     function verifyStep2() {
@@ -473,7 +531,6 @@
         const isLove = item.getAttribute('data-love') === 'true';
         const isSelected = item.classList.contains('selected');
 
-        // If user picked a trap, OR missed a love item
         if ((isLove && !isSelected) || (!isLove && isSelected)) {
           failed = true;
         }
@@ -481,22 +538,18 @@
 
       if (failed) {
         const container = document.getElementById('mainContainer');
-        const toast = document.getElementById('toastMsg');
+        const toast = document.getElementById('toast2');
         
         container.classList.add('shake');
         toast.textContent = "Oops! You selected something Gauri hates or missed a favorite! Try again 😉";
-        
         setTimeout(() => container.classList.remove('shake'), 400);
       } else {
-        // Success Step 2
         confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 }, colors: ['#a8e6cf', '#48cae4', '#ffd166'] });
         goToStep(3);
       }
     }
 
-    // ----------------------------------
     // STEP 3 LOGIC (SCANNER)
-    // ----------------------------------
     function startHold() {
       const btn = document.getElementById('scannerBtn');
       const hint = document.getElementById('holdHint');
@@ -506,11 +559,9 @@
       hint.style.color = "var(--mint-dark)";
 
       holdTimer = setTimeout(() => {
-        // Successfully Held for 2 Seconds!
         btn.classList.remove('holding');
         hint.textContent = "SCAN COMPLETE! 🎉";
         
-        // Massive Celebration Confetti
         confetti({
           particleCount: 120,
           spread: 80,
@@ -518,7 +569,6 @@
           colors: ['#a8e6cf', '#48cae4', '#0096c7', '#ffffff', '#ffd166']
         });
 
-        // Show Unlocked Success View
         setTimeout(() => {
           document.getElementById('step3').style.display = 'none';
           document.getElementById('stepIndicator').style.display = 'none';
@@ -526,7 +576,7 @@
           document.getElementById('successView').style.display = 'block';
         }, 600);
 
-      }, 2000); // 2 Seconds
+      }, 2000);
     }
 
     function endHold() {
@@ -541,7 +591,6 @@
       }
     }
 
-    // Helper: Step Navigator
     function goToStep(stepNum) {
       document.getElementById(`step${currentStep}`).classList.remove('active');
       currentStep = stepNum;
@@ -549,7 +598,6 @@
       const nextCard = document.getElementById(`step${currentStep}`);
       nextCard.classList.add('active');
 
-      // Update UI Progress Bar
       const progressFill = document.getElementById('progressFill');
       const stepIndicator = document.getElementById('stepIndicator');
 
